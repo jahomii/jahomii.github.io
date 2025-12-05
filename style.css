@@ -166,15 +166,15 @@ main {
 
 body {
   background-color: #000000;
+  color: #0CCA4A;
+  font-family: "Tahoma";
+  font-size: small;
   margin: 0;
   padding:0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  background-size: 65px;
-  background-image: var(--body-bg-image);
-  background-size: cover;
   align-self:center;
 }
 
