@@ -1,0 +1,194 @@
+#container {
+  max-width: auto;
+  margin: auto;
+}
+
+/* navigation section*/
+#navbar {
+  height: 40px;
+  background-color: #000000;
+  padding: 20px;
+  margin: 10px auto;
+  border: 0px solid #000000;
+  outline-style: outset;
+  outline-color: #292F36;
+  border-radius: 5px;
+  box-shadow: 0px 0px 20px 2px #292F36;
+  height:fit-content;
+  width:fit-content;
+  text-align: center;
+  margin: 20px 0;
+}
+
+#navbar ul {
+  display: flex;
+  padding: 0px;
+  margin: 10px;
+  list-style-type: none;
+  justify-content: space-evenly;
+}
+
+#flex {
+  display: flex;
+  padding: 10px;
+}
+
+h1 {
+  font-size: 40;
+  color: #1AA926;
+  font-family: "Tahoma";
+}
+
+h2, h3 {
+  font-size: 20;
+  font-family: "Tahoma";
+  color: #0CCA4A;
+}
+
+p {
+  color: #FFFFFF;
+  font-family: "Tahoma";
+  font-size: small;
+}
+
+marquee {
+  font-family: "Tahoma";
+  color: #64ff71;
+  width = 250px;
+ /* equal signs */
+  height = 200px;
+ /* are neccesary */
+  animation: 20s linear infinite;
+  padding-bottom: 10px;
+}
+
+button {
+  background: linear-gradient(to right, #0CCA4A, #64ff71);
+  padding: 10px;
+  width: 120px;
+  margin: 10px;
+  border-radius: 5px;
+  border: none;
+  list-style: none;
+  text-decoration: none;
+  color: #000000;
+  font-weight: bold;
+  font-size: 15;
+  font-family: "tahoma";
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+/* Hover effect for button */
+button:hover {
+  color: #ffffff;
+  text-decoration: none;
+  text-shadow: 2px 2px 3px #1AA926;
+  background: linear-gradient(to right, #1AA926, #0CCA4A); /* Reverse gradient on hover */
+  box-shadow: 0px 0px 25px 5px #292F36; /* Stronger shadow on hover */
+  transform: scale(1.05); /* Slight zoom effect */
+}
+
+/*button links*/
+#click a {
+  color: #292F36;
+  font-weight: bold;
+  font-size: smaller;
+  font-family: "tahoma";
+  text-shadow: 2px 2px 3px #292F36;
+  list-style: none;
+  text-decoration: none;
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+/* link hover */
+#click a:hover {
+  color: #ffffff;
+  text-decoration: none;
+  text-shadow: 2px 2px 3px #1AA926;
+}
+
+/* regular links */
+a {
+  color: #0CCA4A;
+  text-shadow: 2px 2px 3px #FFFFFF;
+  font-family: "tomaha";
+  text-shadow: 2px 2px 3px #1AA926;
+  text-decoration:underline;
+  display: inline-block;
+  font-size: medium;
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+/* link hover */
+a:hover {
+  color: #ffffff;
+  text-decoration: none;
+  text-shadow: 2px 2px 3px #1AA926;
+}
+
+hr {
+  height: 4px;
+  background: linear-gradient(to right, #0CCA4A, #64ff71);
+  border: 3px #000000
+}
+
+/* this colors BOTH sidebars, edit the left and right side bars seprately below*/
+aside {
+  background-color: #000000;
+  width: auto;
+  height: auto;
+  padding: 30px;
+  margin: 10px;
+  border-radius: 5px;
+}
+#leftSidebar {
+  order: 1;
+}
+
+main {
+  background-color: #000000;
+  flex: 1;
+  padding: 20px;
+  margin-right: 5px;
+  order: 2;
+  border-radius: 5px;
+}
+
+#rightSidebar {
+  order: 3;
+}
+
+.content {
+  max-width: 1300px;
+  margin: auto;
+  padding-right: 20px;
+}
+
+body {
+  background-color: #000000;
+  color: #000000;
+  margin: 0;
+  padding:0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background-size: 65px;
+  background-image: var(--body-bg-image);
+  background-size: cover;
+  align-self:center;
+}
+
+.box {
+  border: 0px solid;
+  padding: 20px 15px;
+  margin: 15px;
+  width: auto;
+  height: auto;
+  outline-style: inset;
+  outline-color: #292F36;
+  border-radius: 5px;
+  box-shadow: 0px 0px 15px 2px #292F36;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
