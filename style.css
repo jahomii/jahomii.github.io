@@ -1,6 +1,7 @@
 #container {
   max-width: 80%;
   margin: auto;
+  border-style: 3px #1f1f27;
 }
 
 /* navigation section*/
@@ -82,8 +83,8 @@ button {
 button:hover {
   color: #ffffff;
   text-decoration: none;
-  text-shadow: 2px 2px 3px #1AA926;
-  background: linear-gradient(to right, #1AA926, #0CCA4A); /* Reverse gradient on hover */
+  text-shadow: 2px 2px 3px #079a44;
+  background: linear-gradient(to right, #64ff71, #0CCA4A); /* Reverse gradient on hover */
   box-shadow: 0px 0px 25px 5px #292F36; /* Stronger shadow on hover */
   transform: scale(1.05); /* Slight zoom effect */
 }
@@ -128,7 +129,7 @@ a:hover {
 
 hr {
   height: 4px;
-  background: linear-gradient(to right, #0CCA4A, #64ff71);
+  background: linear-gradient(to right, #33333d, #10111c);
   border: 3px #000000
 }
 
@@ -138,8 +139,8 @@ aside {
   width: auto;
   height: auto;
   padding: 30px;
-  margin: 10px;
   border-radius: 5px;
+  border: 1px solid #33333d;
 }
 #leftSidebar {
   order: 1;
@@ -152,6 +153,7 @@ main {
   margin-right: 5px;
   order: 2;
   border-radius: 5px;
+  border: 1px solid #33333d;
 }
 
 #rightSidebar {
@@ -165,7 +167,7 @@ main {
 }
 
 body {
-  background-color: #000000;
+  background: linear-gradient(to bottom, #000000, #10111c);
   color: #0CCA4A;
   font-family: "Tahoma";
   font-size: small;
@@ -174,20 +176,23 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  align-self: center;
+  align-self:center;
 }
 
 .box {
-  border: 0px solid;
-  padding: 20px 15px;
-  margin: 15px;
+  border: 1px solid #33333d;
   width: auto;
   height: auto;
-  outline-style: inset;
-  outline-color: #292F36;
+  padding: 10px;
   border-radius: 5px;
-  box-shadow: 0px 0px 15px 2px #292F36;
-  overflow-y: auto;
-  scrollbar-width: none;
 }
+
+/* Styles for screens up to 768px wide */
+@media (max-width: 768px) {
+    /* Mobile-specific styles */
+}
+
+/* Styles for screens wider than 768px */
+@media (min-width: 769px) {
+    /* Desktop-specific styles */
+    
