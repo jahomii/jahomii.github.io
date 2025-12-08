@@ -217,18 +217,23 @@ while True:
             ceiling_yn = ceiling_yn.upper()
         # if yes, get the number
         if ceiling_yn == "Y":
-            ceiling_length = int(input("Enter the length of your ceiling (feet): "))
-            # positive whole numbers only
-            if ceiling_length <= 0:
-                print("Invalid entry. Enter a positive value.")
-                continue
-            ceiling_width = int(input("Enter the width of your ceiling (feet): "))
-            # positive whole numbers only
-            if ceiling_width <= 0:
-                print("Invalid entry. Enter a positive value.")
+            try:
+                ceiling_length = int(input("Enter the length of your ceiling (feet): "))
+                # positive whole numbers only
+                if ceiling_length <= 0:
+                    print("Invalid entry. Enter a positive value.")
+                    continue
+                if ceiling_length > 0:
+                    ceiling_width = int(input("Enter the width of your ceiling (feet): "))
+                    # positive whole numbers only
+                    if ceiling_width <= 0:
+                        print("Invalid entry. Enter a positive value.")
+                        continue
+            except ValueError:
+                print("Invalid entry. Enter a numerical value.")
                 continue
             break
-        # not paiting the ceiling, move to next section
+        # not painting the ceiling, move to next section
         if ceiling_yn == "N":
             break
         else:
