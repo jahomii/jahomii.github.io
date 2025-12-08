@@ -175,7 +175,10 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+<<<<<<< HEAD
   justify-content: flex-start;
+=======
+>>>>>>> 28e8ede6f6758894761160519e15049009ac05a2
   align-self:center;
 }
 
