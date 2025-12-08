@@ -174,11 +174,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-<<<<<<< HEAD
   justify-content: center;
-=======
   justify-content: flex-start;
->>>>>>> ef89588d35635a95c529d4345249aee42e3c1665
   align-self:center;
 }
 

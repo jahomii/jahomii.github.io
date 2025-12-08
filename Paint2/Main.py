@@ -1,9 +1,8 @@
 # Jaiden Blanchard
 # CS 499 Capstone with Professor Sherri Maciosek
-# started 11 / 10 / 2025, submitted 11 / 15 / 2025
+# started 11 / 10 / 2025, first submission 11 / 15 / 2025, polished 12 / 8 /2025
 
 from PaintNeeded import PaintNeeded
-import math
 
 # list to hold wall_width variables
 wall_list = []
@@ -11,7 +10,7 @@ window_list = []
 door_list = []
 
 #**********************************************************
-# This section is meant to receive a number of walls a
+# This section is meant to receive the number of walls the
 # user will paint.
 #**********************************************************
 
@@ -28,9 +27,8 @@ while True:
     break
 
 #**********************************************************
-# This is where the wall calculations are done
-# individual widths for each wall
-# multiplied by the single room height input
+# Recieve individiual wall inputs and one room height 
+# input. 
 #**********************************************************
 
 for wall in range(wall_count):
@@ -62,9 +60,10 @@ while True:
         continue
 
 #**********************************************************
-# This section is where the user inputs the number of
-# windows they have, and their width and height measurements.
-# these totals are removed from the final number
+# Ask about the existence of windows
+# if yes, the user will input an individual width for each window
+# and one overall height input
+# if no, skip this section
 #**********************************************************
 
 while True:
@@ -89,6 +88,10 @@ while True:
                             if window_width <= 0:
                                 print("Error: window width cannot be zero or less")
                                 continue
+                            # window widths must be smaller than or equal to wall widths
+                            if window_width > wall_width:
+                                print("Error: window width cannot exceed wall width")
+                                continue
                             else:  # valid entry? add it to the list
                                 window_list.append(window_width)
                         except ValueError:
@@ -103,7 +106,11 @@ while True:
                             window_height = int(input("Enter the height of your window(s) (feet): "))
                             # positive whole numbers only
                             if window_height <= 0:
-                                print("Error: wall height cannot be zero or less")
+                                print("Error: window height cannot be zero or less")
+                                continue
+                            # window heights must be smaller than or equal to wall heights
+                            if window_height > wall_height:
+                                print("Error: window height cannot exceed wall height")
                                 continue
                             break
                     except ValueError:
@@ -113,6 +120,7 @@ while True:
                 print("Invalid entry. Enter a numerical value.")
                 continue
             break
+        # No windows, move to next section
         if windows_yn == "N":
             window_count = 0
             break
@@ -124,9 +132,10 @@ while True:
         continue
 
 #**********************************************************
-# This section is where the user inputs the number of
-# doors they have, and their width and height measurements.
-# these totals are removed from the final number
+# Ask about the existence of doors
+# if yes, the user will input an individual width for each door
+# and one overall height input
+# if no, skip this section
 #**********************************************************
 
 while True:
@@ -151,6 +160,10 @@ while True:
                             if door_width <= 0:
                                 print("Error: door width cannot be zero or less")
                                 continue
+                            # door widths must be smaller than or equal to wall widths
+                            if door_width > wall_width:
+                                print("Error: door width cannot exceed wall width")
+                                continue
                             else: # valid entry? add it to the list
                                 door_list.append(door_width)
                         except ValueError:
@@ -167,6 +180,10 @@ while True:
                             if door_height <= 0:
                                 print("Error: door height cannot be zero or less")
                                 continue
+                            # door heights must be smaller than or equal to wall heights
+                            if door_height > wall_height:
+                                print("Error: door height cannot exceed wall height")
+                                continue
                             break
                     except ValueError:
                         print("Invalid entry. Enter a numerical value.")
@@ -175,6 +192,7 @@ while True:
                 print("Invalid entry. Enter a numerical value.")
                 continue
             break
+        # no doors, move to next section
         if doors_yn == "N":
             door_count = 0
             break
@@ -186,9 +204,9 @@ while True:
         continue
 
 #**********************************************************
-# This section asks the user about their ceiling
-# and asks for a width and length if they confirm
-# that they are painting their ceiling
+# ask if the user will be painting their ceiling.
+# if yes, recieve the width and length
+# if no, move to next section
 #**********************************************************
 
 while True:
@@ -210,6 +228,7 @@ while True:
                 print("Invalid entry. Enter a positive value.")
                 continue
             break
+        # not paiting the ceiling, move to next section
         if ceiling_yn == "N":
             break
         else:
@@ -220,9 +239,9 @@ while True:
         continue
 
 #**********************************************************
-# The user is asked how many coats they plan to paint,
-# which doubles the area for the final calculation
-# to account for the extra paint usage
+# Ask the user how many coats they will apply.
+# the total paintable area is multiplied by the number
+# of coats input
 #**********************************************************
 
 while True:
@@ -238,22 +257,33 @@ while True:
         continue
 
 #**********************************************************
-# Finally the totals are calculated and the user is told
-# how many gallons are needed to paint their whole room
+# Calculate the total area for the walls, windows, doors,
+# and ceiling, mulltiplied by coat count, and divide by 
+# sq ft per gallon, and recieve the final output
 #**********************************************************
 
+# the sum of every wall weidth multiplied by the wall height
 total_wall_area = sum(wall_list) * wall_height
 
+# the area of the ceiling, only calculated if user answered "Y" to ceiling
 total_ceiling_area = 0
 if ceiling_yn == "Y":
     total_ceiling_area = ceiling_length * ceiling_width
 
+# the area of the windows, only calculated if user answered "Y" to windows
 total_window_area = 0
 if windows_yn == "Y":
     total_window_area = sum(window_list) * window_height
+    if total_window_area > total_wall_area:
+        print("Window area is larger than wall area. You may want to consider recalculating.")
+        
+
+# the area of the doors, only calculated if user answered "Y" to doors
 total_door_area = 0
 if doors_yn == "Y":
     total_door_area = sum(door_list) * door_height
+    if total_door_area > total_wall_area:
+        print("Door area is larger than wall area. You may want to consider recalculating.")
 
 total_area = total_wall_area + total_ceiling_area - total_window_area - total_door_area
 total_area = max(0, total_area)  # to prevent negative area results
