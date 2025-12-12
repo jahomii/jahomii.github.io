@@ -42,7 +42,9 @@
                 sns.barplot(x="play_count", y="song_title", data=top_tracks_summary,
                             label="Total", palette="magma", hue="song_title", legend=False)
                 # print a table including the top 20 tracks of all time
-                top_tracks_summary_anagram = top_tracks_summary.melt(id_vars=["song_title", "album_name", "play_count"], value_name="artist").drop(columns=["variable"])
+                top_tracks_summary_anagram = top_tracks_summary.melt(
+                    id_vars=["song_title", "album_name", "play_count"], 
+                    value_name="artist").drop(columns=["variable"])
                 top_tracks_summary_anagram.head(20)
                 </code></pre>
                 </div>
@@ -72,7 +74,9 @@
                 sns.barplot(x="play_count", y="song_title", data=top_tracks_2025,
                             label="Total", palette="magma", hue="song_title", legend=False)
                 # print a table including the top 10 tracks of 2025
-                top_tracks_2025_anagram = top_tracks_2025.melt(id_vars=["song_title", "album_name", "play_count"], value_name="artist").drop(columns=["variable"])
+                top_tracks_2025_anagram = top_tracks_2025.melt(
+                    id_vars=["song_title", "album_name", "play_count"], 
+                    value_name="artist").drop(columns=["variable"])
                 top_tracks_2025_anagram.head(10)
                 </code></pre>
             </div>
