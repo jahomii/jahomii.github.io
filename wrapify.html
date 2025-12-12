@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wrapify</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="container">
+
+    <div id="flex">
+
+        <!-- MAIN CONTENT -->
+        <main>
+            <h1 class="box"><center>Wrapify</center></h1>
+            <hr>
+
+            <div class="box">
+                <center><h3>Wrapify was created earlier this year (2025) as a personal project to practice my
+                python coding and to build something that was interesting and meaningful to me. As of now, 
+                Wrapify will take a folder of Spotify listening history, build a CSV file from the provided 
+                JSON documents, and produce metrics that tell users about their top songs, artists, and albums.</h3></center>
+                <div class="code_box">
+                <pre><code>
+                #---------------------------------------------------------------------------------
+                # The following code will produce the most listened to songs, artists, and albums of all time
+                #---------------------------------------------------------------------------------
+                with open('streaming_history.csv', encoding='utf-8') as f:
+                    data = pd.read_csv(f)
+
+                    top_tracks_summary = ( # ensure a song has the same artist and album name before adding it to the count
+                        data.groupby(['song_title', 'artist_name', 'album_name'])
+                            .size()
+                            .reset_index(name='play_count')
+                            .sort_values(by='play_count', ascending=False)
+                            .head(20)
+                    )
+
+                # print a bar plot including the top 20 tracks of all time
+                sns.barplot(x="play_count", y="song_title", data=top_tracks_summary,
+                            label="Total", palette="magma", hue="song_title", legend=False)
+                # print a table including the top 20 tracks of all time
+                top_tracks_summary_anagram = top_tracks_summary.melt(id_vars=["song_title", "album_name", "play_count"], value_name="artist").drop(columns=["variable"])
+                top_tracks_summary_anagram.head(20)
+                </code></pre>
+                </div>
+            <center><h3>The above code will produce the following results:</h3></center>
+            <div class="box">
+                <center>
+                <img src="screenshots\Wrapify top songs.png" alt="Top 20 songs produced by Wrapify" width="700">
+                <img src="screenshots\Wrapify top songs barplot.png" alt="Top 20 songs produced by Wrapify" width="700">
+                </center>
+            </div>
+            <center><h3>Additionally, Wrapify can filter listening history by year.</h3>
+            <h3>The following code snippet demonstrates how to filter the dataset for listening history from 2025 only:</h3></center>
+            <div class="code_box">
+                <pre><code>
+                # dataset for 2025 listening patterns
+                data_2025 = data[data['ts'].between('2025-01-00T00:00:00Z', '2025-12-31T23:59:59Z')]
+                top_tracks_2025 = (
+                    data_2025.groupby(['song_title', 'artist_name', 'album_name'])
+                        .size()
+                        .reset_index(name='play_count')
+                        .sort_values(by='play_count', ascending=False)
+                        .head(10)
+                )
+
+                # print a bar plot including the top 10 tracks of 2025
+                sns.barplot(x="play_count", y="song_title", data=top_tracks_2025,
+                            label="Total", palette="magma", hue="song_title", legend=False)
+                # print a table including the top 10 tracks of 2025
+                top_tracks_2025_anagram = top_tracks_2025.melt(id_vars=["song_title", "album_name", "play_count"], value_name="artist").drop(columns=["variable"])
+                top_tracks_2025_anagram.head(10)
+                </code></pre>
+                </div>
+            <center><h3> Which results in the following:</h3></center>
+            <div class="box">
+                <center>
+                <img src="screenshots\Wrapify top songs 2025.png" alt="Top 20 songs produced by Wrapify" width="700">
+                <img src="screenshots\Wrapify top songs barplot 2025.png" alt="Top 20 songs produced by Wrapify" width="700">
+                </center>
+            </div>
+            <center><h3>Want to see a breakdown of a users listening trends by year?.</h3></center>
+            <div class="code_box">
+                <pre><code>
+                # Bar plot to show hours listened to each year
+                ms_by_year = {
+                    'year': ['2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025'],
+                    'hours': [hours_2016, hours_2017, hours_2018, hours_2019, hours_2020, hours_2021, hours_2022, hours_2023, hours_2024, hours_2025]
+                    }
+                ms_df = pd.DataFrame(ms_by_year)
+                sns.barplot(x="year", y="hours", data=ms_df,
+                            label="Total", palette="YlGnBu", hue="hours", legend=False)
+                </code></pre>
+                </div>
+                <div class="box">
+                <center>
+                <img src="screenshots\Wrapify listening by year.png" alt="Top 20 songs produced by Wrapify" width="700">
+                </center>
+                </div>
+                <center><h3> Wrapify also produces a list for you top artists, top albums, and your 
+                listening times broken down by minute, hour, and day for each year. </h3>
+                <h3>Want to play with the Wrapify code yourself? Check it out the Github repository.</h3>
+                <h3>Want to see some of my other projects? Return home to see what else I am highlighting.</h3></center>
+            </div>
+            <center>
+            <a href="https://github.com/jahomii/jahomii.github.io/tree/main/Wrapify" target="_blank"><button>Wrapify</button></a>
+            <a href="index.html" target="_blank"><button>Return Home</button></a>
+            </center>
+        </main>
+</body>
+</html>

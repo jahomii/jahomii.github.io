@@ -185,6 +185,16 @@ body {
   height: auto;
   padding: 10px;
   border-radius: 5px;
+  margin: 10px;
+}
+
+.code_box {
+  background: linear-gradient(to bottom, #10111c, #33333d);
+  border: 1px solid #33333d;
+  width: auto;
+  height: auto;
+  padding: 10px;
+  border-radius: 5px;
 }
 
 /* Styles for screens up to 768px wide */
