@@ -21,7 +21,8 @@
                 python coding and to build something that was interesting and meaningful to me. As of now, 
                 Wrapify will take a folder of Spotify listening history, build a CSV file from the provided 
                 JSON documents, and produce metrics that tell users about their top songs, artists, and albums.</h3></center>
-                <div class="code_box">
+            
+            <div class="code_box">
                 <pre><code>
                 #---------------------------------------------------------------------------------
                 # The following code will produce the most listened to songs, artists, and albums of all time
@@ -52,6 +53,7 @@
                 <img src="screenshots\Wrapify top songs barplot.png" alt="Top 20 songs produced by Wrapify" width="700">
                 </center>
             </div>
+
             <center><h3>Additionally, Wrapify can filter listening history by year.</h3>
             <h3>The following code snippet demonstrates how to filter the dataset for listening history from 2025 only:</h3></center>
             <div class="code_box">
@@ -73,7 +75,8 @@
                 top_tracks_2025_anagram = top_tracks_2025.melt(id_vars=["song_title", "album_name", "play_count"], value_name="artist").drop(columns=["variable"])
                 top_tracks_2025_anagram.head(10)
                 </code></pre>
-                </div>
+            </div>
+
             <center><h3> Which results in the following:</h3></center>
             <div class="box">
                 <center>
@@ -81,6 +84,7 @@
                 <img src="screenshots\Wrapify top songs barplot 2025.png" alt="Top 20 songs produced by Wrapify" width="700">
                 </center>
             </div>
+
             <center><h3>Want to see a breakdown of a users listening trends by year?.</h3></center>
             <div class="code_box">
                 <pre><code>
@@ -93,8 +97,9 @@
                 sns.barplot(x="year", y="hours", data=ms_df,
                             label="Total", palette="YlGnBu", hue="hours", legend=False)
                 </code></pre>
-                </div>
-                <div class="box">
+            </div>
+
+            <div class="box">
                 <center>
                 <img src="screenshots\Wrapify listening by year.png" alt="Top 20 songs produced by Wrapify" width="700">
                 </center>
@@ -104,10 +109,12 @@
                 <h3>Want to play with the Wrapify code yourself? Check it out the Github repository.</h3>
                 <h3>Want to see some of my other projects? Return home to see what else I am highlighting.</h3></center>
             </div>
+
             <center>
             <a href="https://github.com/jahomii/jahomii.github.io/tree/main/Wrapify" target="_blank"><button>Wrapify</button></a>
             <a href="index.html" target="_blank"><button>Return Home</button></a>
             </center>
+            
         </main>
 </body>
 </html>

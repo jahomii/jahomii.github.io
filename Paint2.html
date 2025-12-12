@@ -13,58 +13,204 @@
     <div id="flex">
         <!-- MAIN CONTENT -->
         <main>
-            <h1 class="box"><center>Wrapify</center></h1>
+            <h1 class="box"><center>Paint2</center></h1>
             <hr>
 
             <div class="box">
-                <center><h3></h3></center>
+                <center><h3>Paint2 is a simple porgram that will ask a user for any amount of walls, 
+                    a single hight for the whole room, and individual wall widths. All this information 
+                    is gathered to calculate how many gallons of paint is required to paint to cover
+                    the wall area.</h3></center>
 
                 <div class="code_box">
                 <pre><code>
+                #**********************************************************
+                # This section is meant to receive the number of walls the
+                # user will paint.
+                #**********************************************************
 
+                while True:
+                    try: # ask for number of walls
+                        wall_count = int(input("How many walls do you wish to paint? "))
+                        # positive whole numbers only
+                        if wall_count <= 0:
+                            print("Invalid entry. Enter a positive value.")
+                            continue
+                    except ValueError:
+                        print("Invalid entry. Enter a numerical value.")
+                        continue
+                    break
+                
+                #**********************************************************
+                # Recieve individiual wall inputs and one room height 
+                # input. 
+                #**********************************************************
+
+                for wall in range(wall_count):
+                    while True:
+                        try:
+                            wall_width = int(input(f"Enter the width of your wall #{wall+1} (feet): "))
+                            # positive whole numbers only
+                            if wall_width <= 0:
+                                print("Error: wall width cannot be zero or less")
+                                continue
+                            else: # valid entry? add it to the list
+                                wall_list.append(wall_width)
+                        except ValueError:
+                            print("Invalid entry. Enter a numerical value.")
+                            continue
+                        break
+                # get the height of the room
+                while True:
+                    try: # only run if there is a wall width of a positive whole number
+                        if wall_width > 0:
+                            wall_height = int(input("Enter the height of your wall (feet): "))
+                            # positive whole numbers only
+                            if wall_height <= 0:
+                                print("Error: wall height cannot be zero or less")
+                                continue
+                            break
+                    except ValueError:
+                        print("Invalid entry. Enter a numerical value.")
+                        continue
                 </code></pre>
                 </div>
 
-            <center><h3></h3></center>
-
-            <div class="box">
-                <center>
-                <img src="" alt="" width="700">
-                <img src="" alt="" width="700">
-                </center>
-            </div>
-
-            <center><h3></h3>
-            <h3></h3></center>
+            <center><h3>This program will also ask about the existence of doors and windows, 
+                to remove their surface area from the final output.</h3></center>
             
             <div class="code_box">
                 <pre><code>
+                    #**********************************************************
+                    # Ask about the existence of windows
+                    # if yes, the user will input an individual width for each window
+                    # and one overall height input
+                    # if no, skip this section
+                    #**********************************************************
+
+                    while True:
+                        try: # determine if the user has windows in their room
+                            windows_yn = input("Are their windows in your room? [Y/N] ")
+                            # if lowercase input is received, convert it to uppercase
+                            if windows_yn == windows_yn.lower():
+                                windows_yn = windows_yn.upper()
+                            # if yes, get the number
+                            if windows_yn == "Y":
+                                try:  # ask for number of windows
+                                    window_count = int(input("How many windows are in your room? "))
+                                    # positive whole numbers only
+                                    if window_count <= 0:
+                                        print("Invalid entry. Enter a positive value.")
+                                        continue
+                                    for window in range(window_count):
+                                        while True:
+                                            try:
+                                                window_width = int(input(f"Enter the width of your window #{window + 1} (feet): "))
+                                                # positive whole numbers only
+                                                if window_width <= 0:
+                                                    print("Error: window width cannot be zero or less")
+                                                    continue
+                                                # window widths must be smaller than or equal to wall widths
+                                                if window_width > wall_width:
+                                                    print("Error: window width cannot exceed wall width")
+                                                    continue
+                                                else:  # valid entry? add it to the list
+                                                    window_list.append(window_width)
+                                            except ValueError:
+                                                print("Invalid entry. Enter a numerical value.")
+                                                continue
+                                            break
+                                    # get the height of the windows
+                                    while True:
+                                        try: # only run if there is a window width of a positive whole number
+                                            if window_width > 0:
+                                                # receive the height input
+                                                window_height = int(input("Enter the height of your window(s) (feet): "))
+                                                # positive whole numbers only
+                                                if window_height <= 0:
+                                                    print("Error: window height cannot be zero or less")
+                                                    continue
+                                                # window heights must be smaller than or equal to wall heights
+                                                if window_height > wall_height:
+                                                    print("Error: window height cannot exceed wall height")
+                                                    continue
+                                                break
+                                        except ValueError:
+                                            print("Invalid entry. Enter a numerical value.")
+                                            continue
+                                except ValueError:
+                                    print("Invalid entry. Enter a numerical value.")
+                                    continue
+                                break
+                            # No windows, move to next section
+                            if windows_yn == "N":
+                                window_count = 0
+                                break
+                            else:
+                                print("Error: Invalid input. Please type 'Y' or 'N' ")
+                                continue
+                        except ValueError:
+                            print("Invalid entry. Enter a numerical value.")
+                            continue
                 </code></pre>
                 </div>
 
-            <center><h3></h3></center>
-
-            <div class="box">
-                <center>
-                <img src="" alt="" width="700">
-                <img src="" alt="" width="700">
-                </center>
-            </div>
-
-            <center><h3></h3></center>
+            <center><h3>Additionally, a user can input their ceiling dimensions, and add that to the final calculation</h3></center>
 
             <div class="code_box">
                 <pre><code>
+                    #**********************************************************
+                    # ask if the user will be painting their ceiling.
+                    # if yes, recieve the width and length
+                    # if no, move to next section
+                    #**********************************************************
+
+                    while True:
+                        try: # determine if the user is painting their ceiling
+                            ceiling_yn = input("Will you be painting your ceiling? [Y/N] ")
+                            # if lowercase input is received, convert it to uppercase
+                            if ceiling_yn == ceiling_yn.lower():
+                                ceiling_yn = ceiling_yn.upper()
+                            # if yes, get the number
+                            if ceiling_yn == "Y":
+                                try:
+                                    ceiling_length = int(input("Enter the length of your ceiling (feet): "))
+                                    # positive whole numbers only
+                                    if ceiling_length <= 0:
+                                        print("Invalid entry. Enter a positive value.")
+                                        continue
+                                    if ceiling_length > 0:
+                                        ceiling_width = int(input("Enter the width of your ceiling (feet): "))
+                                        # positive whole numbers only
+                                        if ceiling_width <= 0:
+                                            print("Invalid entry. Enter a positive value.")
+                                            continue
+                                except ValueError:
+                                    print("Invalid entry. Enter a numerical value.")
+                                    continue
+                                break
+                            # not painting the ceiling, move to next section
+                            if ceiling_yn == "N":
+                                break
+                            else:
+                                print("Error: Invalid input. Please type 'Y' or 'N' ")
+                                continue
+                        except ValueError:
+                            print("Invalid entry. Enter a numerical value.")
+                            continue
                 </code></pre>
-                </div>
+            </div>
+            <div>
+            <center><h3>Once the user has input all of their information, the final number can be calculated</h3></center>
+            </div>
 
-                <div class="box">
+            <div class="box">
                 <center>
-                <img src="" alt="" width="700">
+                <img src="screenshots\paint2 run results.png" alt="final output of the Paint2 program" width="700">
                 </center>
-                </div>
-
-            <center><h3></h3></center>
+            </div>
+            <center><h3> Want to try out Paint2? Check it out the Github repository.</h3>
+                <h3>Want to see some of my other projects? Return home to see what else I am highlighting.</h3></center>
             </div>
 
             <center>
