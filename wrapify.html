@@ -15,12 +15,90 @@
         <main>
                         <h1 class="box"><center>Wrapify</center></h1>
             <hr>
+            <center>
+            <a href="https://github.com/jahomii/jahomii.github.io/tree/main/Wrapify" target="_blank"><button>Github</button></a>
+            <a href="Wrapify\Wrapify Enhancements.pdf" target="_blank"><button>Wrapify PDF</button></a>
+            <a href="index.html"><button>Return Home</button></a>
+            </center>
 
             <div class="box">
-                <center><h3>Wrapify was created earlier this year (2025) as a personal project to practice my
-                python coding and to build something that was interesting and meaningful to me. As of now, 
-                Wrapify can take a folder of Spotify listening history, build a CSV file from the provided 
-                JSON documents, and produce metrics that tell will users about their top songs, artists, and albums.</h3></center>
+                <center><h3>The artifact Wrapify was created earlier this year (2025) as a personal project to practice my
+                python coding and to build something that was interesting and meaningful to me. The original
+                version of the code prior to enhancements would take the folder of JSONs that Spotify provides
+                to users who request their data and concatenate each file to build one large csv.</h3></center>
+
+            <div class="code_box">
+                <pre><code>
+                    #---------------------------------------------------------------------------------
+                    # The following code is meant to load a series of JSON files from one folder, 
+                    # concatenate them all together, remove rows with null values, and save them as 
+                    # an entirely new csv file that can then be used for data queries.
+                    #---------------------------------------------------------------------------------
+                    def merge_json_files(folder):
+                        merged_data = pd.DataFrame()
+
+                        # ensure folder exists
+                        if not os.path.isdir(folder):
+                            print(f"Error: Folder '{folder}' not found.")
+                            return
+
+                        # iterate through all files in the folder
+                        for filename in os.listdir(folder):
+                            if filename.endswith('.json'): # ensure it ends in .json
+                                filepath = os.path.join(folder, filename)
+                                try:
+                                    with open(filepath, encoding='utf-8') as f:
+                                        data = pd.read_json(f)
+                                        merged_data = pd.concat([merged_data, data], ignore_index=True) 
+                                except ValueError as e:
+                                    print(f"Warning: failed to read {filename}: {e}") # exception, failure to read json files
+                            if merged_data.empty:
+                                print(f"No JSON rows found in '{folder}'.") # catch to say there are no rows
+                                return      
+                            
+                            # remove any rows without a track name
+                            cleaned_data = merged_data.dropna(subset=['master_metadata_track_name'])
+
+                            # I don't want any of these keys in the final dataset
+                            keys_to_remove = [
+                                "platform", "conn_country", "ip_addr", "episode_name", "episode_show_name", 
+                                "spotify_episode_uri","audiobook_title", "audiobook_uri", "audiobook_chapter_uri", 
+                                "audiobook_chapter_title", "incognito_mode", "offline_timestamp"
+                                ]
+                            for key in keys_to_remove:
+                                cleaned_data.pop(key)
+
+                            # renaming columns for better readability
+                            cleaned_data = cleaned_data.rename(columns={ 
+                                'master_metadata_track_name': 'song_title',
+                                'master_metadata_album_artist_name': 'artist_name',
+                                'master_metadata_album_album_name': 'album_name',
+                                'spotify_track_uri': 'track_url'
+                            })
+
+                            # Keeps rows where ms_played is between 20000 and 900000
+                            # songs outside of this range are removed
+                            cleaned_data = cleaned_data[cleaned_data['ms_played'].between(20000, 900000)]
+
+                            # replace '$' with 'S' since it gets misread by the parser
+                            cleaned_data['song_title'] = cleaned_data['song_title'].astype(str).str.replace('$', 'S', regex=False)
+                            cleaned_data['album_name'] = cleaned_data['album_name'].astype(str).str.replace('$', 'S', regex=False)
+                            cleaned_data['artist_name'] = cleaned_data['artist_name'].astype(str).str.replace('$', 'S', regex=False)
+
+                        # remove null values and save merged DataFrame to JSON file (pretty formatted)
+                        cleaned_data.to_csv('streaming_history.csv', index=False)
+                        print(f"Merged {len(cleaned_data)} total rows from {folder}/")
+                </code></pre>
+            </div>
+
+            <center><h3>When enhancing my artifact, the biggest issue I faced was with visualization. The output,
+            in its original format, was hardly legible to me, much less someone who didn’t build the project
+            themselves. I did some research on what libraries are best for visualizing datasets, and my data
+            was especially tricky since very few variables are numeric, but my research led me to 
+            <a href="https://seaborn.pydata.org/" target="_blank">Seaborn</a>
+            which is great for visualizing statistical data. I could use their anagram function to put my data in
+            easy-to-read cells, and their bar plot function to make correlation between counts easier to read
+            for visual learners.</h3></center>
             
             <div class="code_box">
                 <pre><code>
@@ -89,7 +167,9 @@
                 </center>
             </div>
 
-            <center><h3>Want to see a breakdown of a users listening trends by year?</h3></center>
+            <center><h3>Wrapify can also break down user listening times by year, producing a bar plot that 
+            shows the total hours spent listening to music. The following code snippet demonstrates how this is done:
+            </h3></center>
             <div class="code_box">
                 <pre><code>
                 # Bar plot to show hours listened to each year
@@ -108,14 +188,27 @@
                 <img src="screenshots\Wrapify listening by year.png" alt="Top 20 songs produced by Wrapify" width="700">
                 </center>
                 </div>
-                <center><h3> Wrapify also produces a list of top artists, albums, and breaks down your  
-                listening times into minutes, hours, and days accumulated per year. </h3>
-                <h3>Want to play with the Wrapify code yourself? Check out the Github repository.</h3>
-                <h3>Want to see some of my other projects? Return home to see what else I am highlighting.</h3></center>
+                <center><h3> The course out comes I met include “Employ strategies for building collaborative
+                environments that enable diverse audiences to support organizational decision making in the
+                field of computer science.” I met this outcome by ensuring Wrapify works for anyone with their
+                Spotify data, not just my dataset alone. Should you request your Spotify data and load it into the
+                same directory as Wrapify, you will be able to read your Spotify listening history results. </h3>
+                
+                <h3>I also met “Demonstrate an ability to use well-founded and innovative techniques, skills, and tools in
+                computing practices for the purpose of implementing computer solutions that deliver value and
+                accomplish industry-specific goals.” I met this outcome by addressing a common desire among
+                end users, which is to read their metrics and data each year. I took an idea that already existed,
+                Spotify Wrapped, and changed it to include some more specific values such as an increased list
+                of favorite songs and artists, and specific counts for each one. I also made use of libraries
+                available to python programming that make data visualization much easier. </h3>
+                <h3>Want to play with the Wrapify code yourself? Check out the <a href="https://github.com/jahomii/jahomii.github.io/tree/main/Wrapify" target="_blank">Github Repository</a>.</h3>
+                <h3> Want to read more about the making of Wrapify? Check out the <a href="Wrapify\Wrapify Enhancements.pdf" target="_blank">Wrapify Enhancements PDF</a>. </h3>
+                <h3>Want to see some of my other projects? <a href="index.html">Return Home</a> to see what else I am highlighting.</h3></center>
             </div>
 
             <center>
             <a href="https://github.com/jahomii/jahomii.github.io/tree/main/Wrapify" target="_blank"><button>Github</button></a>
+            <a href="Wrapify\Wrapify Enhancements.pdf" target="_blank"><button>Wrapify PDF</button></a>
             <a href="index.html"><button>Return Home</button></a>
             </center>
         </main>

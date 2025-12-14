@@ -110,11 +110,11 @@ button:hover {
 
 /* regular links */
 a {
-  color: #0CCA4A;
+  color: #98fea0;
   text-shadow: 2px 2px 3px #FFFFFF;
-  font-family: "tomaha";
-  text-shadow: 2px 2px 3px #1AA926;
-  text-decoration:underline;
+  font-family: "tahoma";
+  text-shadow: 2px 2px 3px #292F36;
+  text-decoration:none;
   display: inline-block;
   font-size: medium;
   transition: all 0.3s ease; /* Smooth transition for hover effects */
@@ -183,7 +183,7 @@ body {
   border: 1px solid #33333d;
   width: auto;
   height: auto;
-  padding: 10px;
+  padding: 20px;
   border-radius: 5px;
   margin: 10px;
 }

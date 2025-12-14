@@ -15,10 +15,24 @@
         <main>
             <h1 class="box"><center>Rapify</center></h1>
             <hr>
+            <center>
+            <a href="https://github.com/jahomii/jahomii.github.io/tree/main/RapifyML" target="_blank"><button>Github</button></a>
+            <a href="RapifyML\Rapify Enhancements.pdf" target="_blank"><button>Rapify ML PDF </button></a>
+            <a href="index.html"><button>Return Home</button></a>
+            </center>
 
             <div class="box">
-                <center><h3>Rapify is a simpler version of my project Wrapify, written with R instead of python. This program will take 
-                a CSV of spotify streaming history, and use it to determine the most popular artists and songs of all time. </h3></center>
+                <center><h3>Rapify is a simpler version of my project, Wrapify, written with R instead of python. This artifact 
+                    is designed to display the listening history of a Spotify user. It was conceptualized a couple weeks back 
+                    but work on it only began on Monday, November 17th, 2025.</h3>
+
+                    <h3> R has great community support, and I was able to find resources very quickly that helped me
+                    achieve my desired goals. For example, when I got stuck on how to go about getting the totals
+                    for each listening year, I found this resource on counting using the 
+                    <a href="https://www.geeksforgeeks.org/r-language/dplyrcount-function-in-r/" target="_blank">dplyr</a> 
+                    package which made the process incredibly simple. I then found an example of the 
+                    <a href="https://www.geeksforgeeks.org/r-language/kable-method-in-r/" target="_blank">kable</a> 
+                    package that explained how to improve the look of my output, making it legible to end users.</h3></center>
             
             <div class="code_box">
                 <pre><code>
@@ -102,8 +116,12 @@
                 </center>
                 </div>
 
-                <center><h3>It has one additional function, in which it can determine whether or not a user will 
-                skip a certain song when it plays.</h3></center>
+                <center><h3> I’m a little dissatisfied with my project, however, because I wanted to achieve these results through
+                machine learning, but that proved incredibly difficult since I am not using numerical data. I was,
+                however, able to use machine learning to predict skipping patterns. Using the OneR package, I
+                was able to determine the likelihood of a song or artist being skipped with over 75% accuracy for
+                both parameters. While it would have been nice to get around 90% accuracy, that I know can be
+                achieved by using a smaller dataset or a stronger algorithm like Random Forest. </h3></center>
                 <div class="code_box">
                 <pre><code>
                     # mild cleaning, I dont want songs to be included that I haven't listened to at LEAST 10 times
@@ -142,13 +160,22 @@
                 <img src="screenshots\Rapify skip predictions.png" alt="" width="700">
                 </center>
             </div>
+            <h3><center> Nevertheless, I met the course outcomes “Design and evaluate computing solutions that
+            solve a given problem using algorithmic principles and computer science practices and
+            standards appropriate to its solution while managing the trade-offs involved in design choices.“
+            by my use of machine learning packages like OneR, and “Design, develop, and deliver
+            professional-quality oral, written, and visual communications that are coherent, technically
+            sound, and appropriately adapted to specific audiences and contexts.” By my interpretation of
+            the results in a user friendly way, such as through tables and bulleted lists. </center></h3>
 
-            <center><h3>Want to view the full Rapify script for yourself? Visit my Github to see everthing I wrote for this project. </h3>
-                <h3>Want to see some of my other projects? Return home to see what else I am highlighting.</h3>
+            <center><h3>Want to view the full Rapify script for yourself? Visit the <a href="https://github.com/jahomii/jahomii.github.io/tree/main/RapifyML" target="_blank">Github Repository</a> to see everthing I wrote for this project. </h3>
+                <h3> Want to read more about the making of Rapify? Check out the <a href="RapifyML\Rapify Enhancements.pdf" target="_blank">Rapify Enhancements PDF</a>. </h3>
+                <h3>Want to see some of my other projects? <a href="index.html">Return Home</a> to see what else I am highlighting.</h3></center>
             </div>
 
             <center>
             <a href="https://github.com/jahomii/jahomii.github.io/tree/main/RapifyML" target="_blank"><button>Github</button></a>
+            <a href="RapifyML\Rapify Enhancements.pdf" target="_blank"><button>Rapify ML PDF </button></a>
             <a href="index.html"><button>Return Home</button></a>
             </center>
         </main>
