@@ -3,214 +3,287 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wrapify</title>
+    <title>Jaiden Blanchard – Wrapify</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div id="container">
-    <div id="flex">
-        <!-- MAIN CONTENT -->
-        <main>
-                        <h1 class="box"><center>Wrapify</center></h1>
-            <hr>
-            <center>
-            <a href="https://github.com/jahomii/jahomii.github.io/tree/main/Wrapify" target="_blank"><button>Github</button></a>
-            <a href="Wrapify\Wrapify Enhancements.pdf" target="_blank"><button>Wrapify PDF</button></a>
-            <a href="index.html"><button>Return Home</button></a>
-            </center>
+<header class="container">
+    <h1>Wrapify</h1>
+    <hr>
+</header>
 
-            <div class="box">
-                <center><h3>The artifact Wrapify was created earlier this year (2025) as a personal project to practice my
-                python coding and to build something that was interesting and meaningful to me. The original
-                version of the code prior to enhancements would take the folder of JSONs that Spotify provides
-                to users who request their data and concatenate each file to build one large csv.</h3></center>
+<nav class="container">
+    <ul>
+        <li><a href="index.html">Return Home</a></li>
+    </ul>
+</nav>
 
-            <div class="code_box">
-                <pre><code>
-                    #---------------------------------------------------------------------------------
-                    # The following code is meant to load a series of JSON files from one folder, 
-                    # concatenate them all together, remove rows with null values, and save them as 
-                    # an entirely new csv file that can then be used for data queries.
-                    #---------------------------------------------------------------------------------
-                    def merge_json_files(folder):
-                        merged_data = pd.DataFrame()
+<!-- INTRODUCTION -->
+<section id="introduction" class="container">
+    <div class="box">
+        <p>
+            Wrapify was a personal project inspired by Spotify's Wrapped series. Created in 2025 as both
+            programming and data analysis practice, this turned into a passion project that I hope to make
+            publicly available for technical and non-technical users alike.
+            <br><br>
+            Built with Python and Jupyter Notebook, users who request their extended listening data from Spotify
+            can insert that file into the program to receive personal metrics including how much time was spent
+            listening to music, what their favorite songs, artists, and albums were, and how many times they
+            revisited those songs and artists.
+        </p>
+    </div>
 
-                        # ensure folder exists
-                        if not os.path.isdir(folder):
-                            print(f"Error: Folder '{folder}' not found.")
-                            return
+    <div class="code_box">
+        <details>
+            <summary>Click to view code</summary>
+            <pre><code>
+#---------------------------------------------------------------------------------
+# Load multiple JSON files, merge them, clean the data, and export to CSV
+#---------------------------------------------------------------------------------
+def merge_json_files(folder):
+    merged_data = pd.DataFrame()
 
-                        # iterate through all files in the folder
-                        for filename in os.listdir(folder):
-                            if filename.endswith('.json'): # ensure it ends in .json
-                                filepath = os.path.join(folder, filename)
-                                try:
-                                    with open(filepath, encoding='utf-8') as f:
-                                        data = pd.read_json(f)
-                                        merged_data = pd.concat([merged_data, data], ignore_index=True) 
-                                except ValueError as e:
-                                    print(f"Warning: failed to read {filename}: {e}") # exception, failure to read json files
-                            if merged_data.empty:
-                                print(f"No JSON rows found in '{folder}'.") # catch to say there are no rows
-                                return      
-                            
-                            # remove any rows without a track name
-                            cleaned_data = merged_data.dropna(subset=['master_metadata_track_name'])
+    if not os.path.isdir(folder):
+        print(f"Error: Folder '{folder}' not found.")
+        return
 
-                            # I don't want any of these keys in the final dataset
-                            keys_to_remove = [
-                                "platform", "conn_country", "ip_addr", "episode_name", "episode_show_name", 
-                                "spotify_episode_uri","audiobook_title", "audiobook_uri", "audiobook_chapter_uri", 
-                                "audiobook_chapter_title", "incognito_mode", "offline_timestamp"
-                                ]
-                            for key in keys_to_remove:
-                                cleaned_data.pop(key)
+    for filename in os.listdir(folder):
+        if filename.endswith('.json'):
+            filepath = os.path.join(folder, filename)
+            try:
+                with open(filepath, encoding='utf-8') as f:
+                    data = pd.read_json(f)
+                    merged_data = pd.concat([merged_data, data], ignore_index=True)
+            except ValueError as e:
+                print(f"Warning: failed to read {filename}: {e}")
 
-                            # renaming columns for better readability
-                            cleaned_data = cleaned_data.rename(columns={ 
-                                'master_metadata_track_name': 'song_title',
-                                'master_metadata_album_artist_name': 'artist_name',
-                                'master_metadata_album_album_name': 'album_name',
-                                'spotify_track_uri': 'track_url'
-                            })
+    if merged_data.empty:
+        print(f"No JSON rows found in '{folder}'.")
+        return
 
-                            # Keeps rows where ms_played is between 20000 and 900000
-                            # songs outside of this range are removed
-                            cleaned_data = cleaned_data[cleaned_data['ms_played'].between(20000, 900000)]
+    cleaned_data = merged_data.dropna(subset=['master_metadata_track_name'])
 
-                            # replace '$' with 'S' since it gets misread by the parser
-                            cleaned_data['song_title'] = cleaned_data['song_title'].astype(str).str.replace('$', 'S', regex=False)
-                            cleaned_data['album_name'] = cleaned_data['album_name'].astype(str).str.replace('$', 'S', regex=False)
-                            cleaned_data['artist_name'] = cleaned_data['artist_name'].astype(str).str.replace('$', 'S', regex=False)
+    keys_to_remove = [
+        "platform", "conn_country", "ip_addr", "episode_name", "episode_show_name",
+        "spotify_episode_uri", "audiobook_title", "audiobook_uri",
+        "audiobook_chapter_uri", "audiobook_chapter_title",
+        "incognito_mode", "offline_timestamp"
+    ]
 
-                        # remove null values and save merged DataFrame to JSON file (pretty formatted)
-                        cleaned_data.to_csv('streaming_history.csv', index=False)
-                        print(f"Merged {len(cleaned_data)} total rows from {folder}/")
-                </code></pre>
-            </div>
+    for key in keys_to_remove:
+        cleaned_data.pop(key)
 
-            <center><h3>When enhancing my artifact, the biggest issue I faced was with visualization. The output,
-            in its original format, was hardly legible to me, much less someone who didn’t build the project
-            themselves. I did some research on what libraries are best for visualizing datasets, and my data
-            was especially tricky since very few variables are numeric, but my research led me to 
-            <a href="https://seaborn.pydata.org/" target="_blank">Seaborn</a>
-            which is great for visualizing statistical data. I could use their anagram function to put my data in
-            easy-to-read cells, and their bar plot function to make correlation between counts easier to read
-            for visual learners.</h3></center>
+    cleaned_data = cleaned_data.rename(columns={
+        'master_metadata_track_name': 'song_title',
+        'master_metadata_album_artist_name': 'artist_name',
+        'master_metadata_album_album_name': 'album_name',
+        'spotify_track_uri': 'track_url'
+    })
+
+    cleaned_data = cleaned_data[cleaned_data['ms_played'].between(20000, 900000)]
+
+    cleaned_data['song_title'] = cleaned_data['song_title'].str.replace('$', 'S', regex=False)
+    cleaned_data['album_name'] = cleaned_data['album_name'].str.replace('$', 'S', regex=False)
+    cleaned_data['artist_name'] = cleaned_data['artist_name'].str.replace('$', 'S', regex=False)
+
+    cleaned_data.to_csv('streaming_history.csv', index=False)
+    print(f"Merged {len(cleaned_data)} total rows from {folder}/")
+            </code></pre>
+        </details>
+    </div>
+</section>
+
+<!-- CHALLENGES -->
+<section id="challenges" class="container">
+    <div class="box">
+        <p>
+            There were a few hurdles in the making of this project, but by far the biggest one I faced was
+            visualization. In its original format, the results produced from my script were poorly formatted
+            and difficult to read.
+            <br><br>
+            With the help of
+            <a href="https://seaborn.pydata.org/" target="_blank">Seaborn</a>, a statistical visualization library,
+            I was able to construct clear tables and diagrams suitable for both visual and textual learners.
+        </p>
+    </div>
+
+    <div class="code_box">
+        <details>
+            <summary>Click to view code</summary>
+            <pre><code>
+#---------------------------------------------------------------------------------
+# The following code will produce the most listened to songs, artists, and albums of all time
+#---------------------------------------------------------------------------------
+with open('streaming_history.csv', encoding='utf-8') as f:
+    data = pd.read_csv(f)
+
+    top_tracks_summary = ( # ensure a song has the same artist and album name before adding it to the count
+        data.groupby(['song_title', 'artist_name', 'album_name'])
+            .size()
+            .reset_index(name='play_count')
+            .sort_values(by='play_count', ascending=False)
+            .head(20)
+    )
             
-            <div class="code_box">
-                <pre><code>
-                #---------------------------------------------------------------------------------
-                # The following code will produce the most listened to songs, artists, and albums of all time
-                #---------------------------------------------------------------------------------
-                with open('streaming_history.csv', encoding='utf-8') as f:
-                    data = pd.read_csv(f)
+    top_artists_summary = (
+        data.groupby(['artist_name'])
+            .size()
+            .reset_index(name='play_count')
+            .sort_values(by='play_count', ascending=False)
+            .head(20)
+    )
 
-                    top_tracks_summary = ( # ensure a song has the same artist and album name before adding it to the count
-                        data.groupby(['song_title', 'artist_name', 'album_name'])
-                            .size()
-                            .reset_index(name='play_count')
-                            .sort_values(by='play_count', ascending=False)
-                            .head(20)
-                    )
+    top_albums_summary = ( # ensure an album has the same artist before adding it to the count
+        data.groupby(['album_name', 'artist_name'])
+            .size()
+            .reset_index(name='play_count')
+            .sort_values(by='play_count', ascending=False)
+            .head(10)
+    )
+    
+    # calculate the total minutes, hours, and days played
+    total_ms_played = data['ms_played'].sum()
+    total_minutes = (total_ms_played / 1000) / 60
+    total_minutes = total_minutes.astype(int)
+    total_hours = int(total_minutes / 60)
+    total_days = int(total_hours / 24)
+)
+            </code></pre>
+        </details>
+    </div>
 
-                # print a bar plot including the top 20 tracks of all time
-                sns.barplot(x="play_count", y="song_title", data=top_tracks_summary,
-                            label="Total", palette="magma", hue="song_title", legend=False)
-                # print a table including the top 20 tracks of all time
-                top_tracks_summary_anagram = top_tracks_summary.melt(
-                    id_vars=["song_title", "album_name", "play_count"], 
-                    value_name="artist").drop(columns=["variable"])
-                top_tracks_summary_anagram.head(20)
-                </code></pre>
-                </div>
-            <center><h3>The above code will produce the following results:</h3></center>
-            <div class="box">
-                <center>
-                <img src="screenshots\Wrapify top songs.png" alt="Top 20 songs produced by Wrapify" width="700">
-                <img src="screenshots\Wrapify top songs barplot.png" alt="Top 20 songs produced by Wrapify" width="700">
-                </center>
-            </div>
+    <div class="box">
+        <p>The above code produces the following results:</p>
+        <div class="image-grid">
+            <img src="https://file.garden/Z-9X7al_RynAMoGk/portfolio/Wrapify%20top%20songs.png"
+                 alt="Top 20 songs table produced by Wrapify" width="100%" loading="lazy">
+            <img src="https://file.garden/Z-9X7al_RynAMoGk/portfolio/top%20songs%20barplot.png"
+                 alt="Top 20 songs bar plot visualization" width="100%" loading="lazy">
+        </div>
+    </div>
+</section>
 
-            <center><h3>Additionally, Wrapify can filter listening history by year.</h3>
-            <h3>The following snippet of code demonstrates how to filter the dataset for listening history from 2025 only:</h3></center>
-            <div class="code_box">
-                <pre><code>
-                # dataset for 2025 listening patterns
-                data_2025 = data[data['ts'].between('2025-01-00T00:00:00Z', '2025-12-31T23:59:59Z')]
-                top_tracks_2025 = (
-                    data_2025.groupby(['song_title', 'artist_name', 'album_name'])
-                        .size()
-                        .reset_index(name='play_count')
-                        .sort_values(by='play_count', ascending=False)
-                        .head(10)
-                )
+<!-- FEATURES -->
+<section id="features" class="container">
+    <div class="box">
+        <p>
+            Knowing that users would be interested in more than just overall statistics, the dataset was
+            broken down into yearly increments. Below is a snapshot of a user's top songs from 2025.
+        </p>
+    </div>
 
-                # print a bar plot including the top 10 tracks of 2025
-                sns.barplot(x="play_count", y="song_title", data=top_tracks_2025,
-                            label="Total", palette="magma", hue="song_title", legend=False)
-                # print a table including the top 10 tracks of 2025
-                top_tracks_2025_anagram = top_tracks_2025.melt(
-                    id_vars=["song_title", "album_name", "play_count"], 
-                    value_name="artist").drop(columns=["variable"])
-                top_tracks_2025_anagram.head(10)
-                </code></pre>
-            </div>
+    <div class="code_box">
+        <details>
+            <summary>Click to view code</summary>
+            <pre><code>
+data_2025 = data[data['ts'].between(
+    '2025-01-01T00:00:00Z', '2025-12-31T23:59:59Z'
+)]
 
-            <center><h3> Which results in the following:</h3></center>
-            <div class="box">
-                <center>
-                <img src="screenshots\Wrapify top songs 2025.png" alt="Top 20 songs produced by Wrapify" width="700">
-                <img src="screenshots\Wrapify top songs barplot 2025.png" alt="Top 20 songs produced by Wrapify" width="700">
-                </center>
-            </div>
+top_tracks_2025 = (
+    data_2025.groupby(['song_title', 'artist_name', 'album_name'])
+        .size()
+        .reset_index(name='play_count')
+        .sort_values(by='play_count', ascending=False)
+        .head(10)
+)
 
-            <center><h3>Wrapify can also break down user listening times by year, producing a bar plot that 
-            shows the total hours spent listening to music. The following code snippet demonstrates how this is done:
-            </h3></center>
-            <div class="code_box">
-                <pre><code>
-                # Bar plot to show hours listened to each year
-                ms_by_year = {
-                    'year': ['2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025'],
-                    'hours': [hours_2016, hours_2017, hours_2018, hours_2019, hours_2020, hours_2021, hours_2022, hours_2023, hours_2024, hours_2025]
-                    }
-                ms_df = pd.DataFrame(ms_by_year)
-                sns.barplot(x="year", y="hours", data=ms_df,
-                            label="Total", palette="YlGnBu", hue="hours", legend=False)
-                </code></pre>
-            </div>
+... 
 
-            <div class="box">
-                <center>
-                <img src="screenshots\Wrapify listening by year.png" alt="Top 20 songs produced by Wrapify" width="700">
-                </center>
-                </div>
-                <center><h3> The course out comes I met include “Employ strategies for building collaborative
-                environments that enable diverse audiences to support organizational decision making in the
-                field of computer science.” I met this outcome by ensuring Wrapify works for anyone with their
-                Spotify data, not just my dataset alone. Should you request your Spotify data and load it into the
-                same directory as Wrapify, you will be able to read your Spotify listening history results. </h3>
-                
-                <h3>I also met “Demonstrate an ability to use well-founded and innovative techniques, skills, and tools in
-                computing practices for the purpose of implementing computer solutions that deliver value and
-                accomplish industry-specific goals.” I met this outcome by addressing a common desire among
-                end users, which is to read their metrics and data each year. I took an idea that already existed,
-                Spotify Wrapped, and changed it to include some more specific values such as an increased list
-                of favorite songs and artists, and specific counts for each one. I also made use of libraries
-                available to python programming that make data visualization much easier. </h3>
-                <h3>Want to play with the Wrapify code yourself? Check out the <a href="https://github.com/jahomii/jahomii.github.io/tree/main/Wrapify" target="_blank">Github Repository</a>.</h3>
-                <h3> Want to read more about the making of Wrapify? Check out the <a href="Wrapify\Wrapify Enhancements.pdf" target="_blank">Wrapify Enhancements PDF</a>. </h3>
-                <h3>Want to see some of my other projects? <a href="index.html">Return Home</a> to see what else I am highlighting.</h3></center>
-            </div>
+# print a bar plot including the top 10 tracks of 2025
+sns.barplot(x="play_count", y="song_title", data=top_tracks_2025,
+            label="Total", palette="magma", hue="song_title", legend=False)
+# print a table including the top 10 tracks of 2025
+top_tracks_2025_anagram = top_tracks_2025.melt(id_vars=["song_title", "album_name", "play_count"], value_name="artist").drop(columns=["variable"])
+top_tracks_2025_anagram.head(10)
+            </code></pre>
+        </details>
+    </div>
 
-            <center>
-            <a href="https://github.com/jahomii/jahomii.github.io/tree/main/Wrapify" target="_blank"><button>Github</button></a>
-            <a href="Wrapify\Wrapify Enhancements.pdf" target="_blank"><button>Wrapify PDF</button></a>
-            <a href="index.html"><button>Return Home</button></a>
-            </center>
-        </main>
+    <div class="box">
+        <div class="image-grid">
+            <img src="https://file.garden/Z-9X7al_RynAMoGk/portfolio/Wrapify%20top%20songs%202025.png"
+                 alt="Top 10 songs of 2025 table" width="100%" loading="lazy">
+            <img src="https://file.garden/Z-9X7al_RynAMoGk/portfolio/wrapify%20top%2010%20songs%202025"
+                 alt="Top 10 songs of 2025 bar plot" width="100%" loading="lazy">
+        </div>
+    </div>
+
+    <div class="box">
+        <p>
+            For users particularly fond of music, Wrapify also calculates total listening time.
+            This is displayed as a yearly comparison bar chart and broken down into minutes, hours,
+            and days for precise insight.
+            <br><br>
+            This information is displayed as an overall bar plot, allowing users to compare their yearly 
+            listening times. However, I also broke this information down into minutes, hours, and days for 
+            each individual year for users who appreciate an exact number. </p> 
+            <div class="code_box"> 
+                <details> 
+                    <summary>Click to view code</summary> 
+                    <pre><code> 
+# Bar plot to show hours listened to each year
+ms_by_year = {
+    'year': ['2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025'],
+    'hours': [hours_2016, hours_2017, hours_2018, hours_2019, hours_2020, hours_2021, 
+              hours_2022, hours_2023, hours_2024, hours_2025]
+    }
+ms_df = pd.DataFrame(ms_by_year)
+sns.barplot(x="year", y="hours", data=ms_df,
+            label="Total", palette="YlGnBu", hue="hours", legend=False)
+
+...
+
+    ms_played_2025 = data_2025['ms_played'].sum()
+    minutes_2025 = (ms_played_2025 / 1000) / 60
+    minutes_2025 = minutes_2025.astype(int)
+    hours_2025 = int(minutes_2025 / 60)
+    days_2025 = int(hours_2025 / 24)
+</code></pre> 
+</details> 
+</div> 
+<div class="bo"> 
+    <div class="image-grid">
+        <img src="https://file.garden/Z-9X7al_RynAMoGk/portfolio/time%20per%20year.png" 
+        alt="Yearly listening times barplot" width="100%" loading="lazy"> 
+        <img src="https://file.garden/Z-9X7al_RynAMoGk/portfolio/2025%20time.png" 
+        alt="2025 listening times" width="100%" loading="lazy">
+</div>
+</div>
+</section>
+
+<!-- CONCLUSION -->
+<section id="conclusion" class="container" style="display: flex;">
+    <div class="box">
+        <p>
+            The code for Wrapify is publicly available on my
+            <a href="https://github.com/jahomii/jahomii.github.io/tree/main/Wrapify" target="_blank">GitHub</a>.
+            There are plans to make this project browser-friendly for non-technical users but in its current state, 
+            Wrapify can only be run via Jupyter Notebook.
+        </p>
+        <hr>
+        <p><center>
+            Want to read more about the making of Wrapify?
+            <a href="Wrapify/Wrapify Enhancements.pdf" target="_blank">Check out the enhancements PDF</a>.
+        </center></p>
+    </div>
+</section>
+
+<section id="footer" class="container" style="display:flex; justify-content:center;">
+    <div class="box" style="display:flex; justify-content:center; background-color: black;">
+        <div class="box">
+            <p>Like what you see? <br> Please reach out. <br> I'm actively seeking remote work. <br><br> NH, USA</p>
+        </div>
+        <div class="box">
+            <p>Email: <br><br> <a href="mailto:jahomii.art@gmail.com&subject=Saw%20Your%20Portfolio">jahomii.art@gmail.com</a></p>
+        </div>
+        <div class="box">
+            <p>Socials: <br><br> <a href="https://www.linkedin.com/in/jaiden-blanchard-a430a9363/" target="_blank" class="linkedin-link"><img src="https://file.garden/Z-9X7al_RynAMoGk/portfolio/linkedin-logo-by-Vexels.png" alt="LinkedIn Logo" width="auto" height="30px"></a> 
+                <a href="https://github.com/jahomii" target="_blank" class="github-link"><img src="https://file.garden/Z-9X7al_RynAMoGk/portfolio/github-icon-lg.png" alt="GitHub Logo" height="30"> </a>
+        </div>
+    </div>
+</section>
 </body>
 </html>
