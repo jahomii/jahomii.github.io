@@ -3,181 +3,296 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rapify</title>
+    <title>Jaiden Blanchard – Rapify</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div id="container">
-    <div id="flex">
-        <!-- MAIN CONTENT -->
-        <main>
-            <h1 class="box"><center>Rapify</center></h1>
-            <hr>
-            <center>
-            <a href="https://github.com/jahomii/jahomii.github.io/tree/main/RapifyML" target="_blank"><button>Github</button></a>
-            <a href="RapifyML\Rapify Enhancements.pdf" target="_blank"><button>Rapify ML PDF </button></a>
-            <a href="index.html"><button>Return Home</button></a>
-            </center>
+<header class="container">
+    <h1>Rapify ML</h1>
+    <hr>
+</header>
 
-            <div class="box">
-                <center><h3>Rapify is a simpler version of my project, Wrapify, written with R instead of python. This artifact 
-                    is designed to display the listening history of a Spotify user. It was conceptualized a couple weeks back 
-                    but work on it only began on Monday, November 17th, 2025.</h3>
+<nav class="container">
+    <ul>
+        <li><a href="index.html">Return Home</a></li>
+    </ul>
+</nav>
 
-                    <h3> R has great community support, and I was able to find resources very quickly that helped me
-                    achieve my desired goals. For example, when I got stuck on how to go about getting the totals
-                    for each listening year, I found this resource on counting using the 
-                    <a href="https://www.geeksforgeeks.org/r-language/dplyrcount-function-in-r/" target="_blank">dplyr</a> 
-                    package which made the process incredibly simple. I then found an example of the 
-                    <a href="https://www.geeksforgeeks.org/r-language/kable-method-in-r/" target="_blank">kable</a> 
-                    package that explained how to improve the look of my output, making it legible to end users.</h3></center>
-            
-            <div class="code_box">
-                <pre><code>
-                    # the total song counts for all time listening
-                    # confirm that the song name and artist are the same to ensure its a unique song and sort by descending order
-                    # install.packages("dplyr")
-                    library(dplyr)
-                    total_song_counts <- count(dt_streaming, song_title, artist_name, sort = TRUE)
+<!-- INTRODUCTION -->
+<section id="introduction" class="container">
+    <div class="box">
+        <p>
+            Rapify has a similar origin to Wrapify with a slightly different goal. The intention with Rapify was to 
+            work on my data quality and cleaning skills since R is built for just that. I started this project prior 
+            to Wrapify in November of 2025. I decided to use this as an opportunity to work out how I would break 
+            down the data into something usable for my future project. 
+            <br><br>
+            Built with R in VS Code with the Jupyter Notebook extension, Rapify focuses on data cleaning, 
+            organization, and visualization.
+        </p>
+    </div>
 
-                    # knitr library so output can be pretty
-                    # install.packages("knitr")
-                    library(knitr)
-                    kable(head(total_song_counts, 20), col.names = c("Song", "Artist", "Plays"), caption = "Top 20 songs of all time")
+    <div class="code_box">
+        <details>
+            <summary>Click to view code</summary>
+            <pre><code>
+# if any songs play for less than 2000 ms or over 900000 ms (15 mins) mark them NA
+streaming_history$ms_played <- ifelse(streaming_history$ms_played > 20000 & streaming_history$ms_played < 900000, streaming_history$ms_played, NA)
+# remove null values
+cleaned_streaming_history <- na.omit(streaming_history)
+summary(streaming_history)
+summary(cleaned_streaming_history)
+            </code></pre>
+        </details>
+    </div>
+</section>
 
-                    # the total artist counts for all time listening
-                    # sort by descending order and use knitr library so output can be pretty
-                    total_artist_counts <- count(dt_streaming, artist_name, sort = TRUE)
-                    kable(head(total_artist_counts, 10), col.names = c("Artist", "Plays"), caption = "Top 10 artists of all time")
-                </code></pre>
-            </div>
+<!-- CHALLENGES -->
+<section id="challenges" class="container">
+    <div class="box">
+        <p>
+            Using the <a href="https://www.geeksforgeeks.org/r-language/dplyrcount-function-in-r/" target="_blank">dplyr</a> 
+            package, I broke down the data set into "listening years" in which I could query these 
+            individual datasets to find yearly statistics like "most listened to song of 2018." Then I could make 
+            this data legible with the <a href="https://www.geeksforgeeks.org/r-language/kable-method-in-r/" target="_blank">kable</a>  
+            package, turning these results into user-friendly tables. 
+            <br><br>
+            Once this was done, I wanted to take it a step further and build a machine learning model that could predict
+            whether or not a user would skip a song based on preivous listening trends.
+        </p>
+    </div>
 
-            <div class="box">
-                <center>
-                <img src="screenshots\Rapify top songs.png" alt="Rapify top 20 songs" width="700">
-                <img src="screenshots/Rapify top artists.png" alt="Rapify top 10 artists" width="700">
-                </center>
-            </div>
+    <div class="code_box">
+        <details>
+            <summary>Click to view code</summary>
+            <pre><code>
+# making tables for each listening year
+listening_2016 <- dt_streaming[
+  ts >= ("2016-01-01T00:00:00Z") &
+  ts <= ("2016-12-31T23:59:59Z")
+]
 
-            <center><h3> Rapify also breaks this information up by year..</h3></center>
+listening_2017 <- dt_streaming[
+  ts >= ("2017-01-01T00:00:00Z") &
+  ts <= ("2017-12-31T23:59:59Z")
+]
 
-            <div class="code_box">
-                <pre><code>
+listening_2018 <- dt_streaming[
+  ts >= ("2018-01-01T00:00:00Z") &
+  ts <= ("2018-12-31T23:59:59Z")
+]
 
-                    total_song_counts_16 <- count(listening_2016, song_title, artist_name, sort = TRUE)
-                    total_artist_counts_16 <- count(listening_2016, artist_name, sort = TRUE)
-                    total_song_counts_17 <- count(listening_2017, song_title, artist_name, sort = TRUE)
-                    total_artist_counts_17 <- count(listening_2017, artist_name, sort = TRUE)
-                    total_song_counts_18 <- count(listening_2018, song_title, artist_name, sort = TRUE)
-                    total_artist_counts_18 <- count(listening_2018, artist_name, sort = TRUE)
-                    total_song_counts_19 <- count(listening_2019, song_title, artist_name, sort = TRUE)
-                    total_artist_counts_19 <- count(listening_2019, artist_name, sort = TRUE)
-                    total_song_counts_20 <- count(listening_2020, song_title, artist_name, sort = TRUE)
-                    total_artist_counts_20 <- count(listening_2020, artist_name, sort = TRUE)
-                    total_song_counts_21 <- count(listening_2021, song_title, artist_name, sort = TRUE)
-                    total_artist_counts_21 <- count(listening_2021, artist_name, sort = TRUE)
-                    total_song_counts_22 <- count(listening_2022, song_title, artist_name, sort = TRUE)
-                    total_artist_counts_22 <- count(listening_2022, artist_name, sort = TRUE)
-                    total_song_counts_23 <- count(listening_2023, song_title, artist_name, sort = TRUE)
-                    total_artist_counts_23<- count(listening_2023, artist_name, sort = TRUE)
-                    total_song_counts_24 <- count(listening_2024, song_title, artist_name, sort = TRUE)
-                    total_artist_counts_24 <- count(listening_2024, artist_name, sort = TRUE)
-                    total_song_counts_25 <- count(listening_2025, song_title, artist_name, sort = TRUE)
-                    total_artist_counts_25 <- count(listening_2025, artist_name, sort = TRUE)
+listening_2019 <- dt_streaming[
+  ts >= ("2019-01-01T00:00:00Z") &
+  ts <= ("2019-12-31T23:59:59Z")
+]
 
-                    kable(head(total_song_counts_16, 10), col.names = c("Song", "Artist", "Plays"), caption = "Top 10 songs of 2016")
-                    kable(head(total_artist_counts_16, 5), col.names = c("Artist", "Plays"), caption = "Top 5 artists of 2016")
-                    kable(head(total_song_counts_17, 10), col.names = c("Song", "Artist", "Plays"), caption = "Top 10 songs of 2017")
-                    kable(head(total_artist_counts_17, 5), col.names = c("Artist", "Plays"), caption = "Top 5 artists of 2017")
-                    kable(head(total_song_counts_18, 10), col.names = c("Song", "Artist", "Plays"), caption = "Top 10 songs of 2018")
-                    kable(head(total_artist_counts_18, 5), col.names = c("Artist", "Plays"), caption = "Top 5 artists of 2018")
-                    kable(head(total_song_counts_19, 10), col.names = c("Song", "Artist", "Plays"), caption = "Top 10 songs of 2019")
-                    kable(head(total_artist_counts_19, 5), col.names = c("Artist", "Plays"), caption = "Top 5 artists of 2019")
-                    kable(head(total_song_counts_20, 10), col.names = c("Song", "Artist", "Plays"), caption = "Top 10 songs of 2020")
-                    kable(head(total_artist_counts_20, 5), col.names = c("Artist", "Plays"), caption = "Top 5 artists of 2020")
-                    kable(head(total_song_counts_21, 10), col.names = c("Song", "Artist", "Plays"), caption = "Top 10 songs of 2021")
-                    kable(head(total_artist_counts_21, 5), col.names = c("Artist", "Plays"), caption = "Top 5 artists of 2021")
-                    kable(head(total_song_counts_22, 10), col.names = c("Song", "Artist", "Plays"), caption = "Top 10 songs of 2022")
-                    kable(head(total_artist_counts_22, 5), col.names = c("Artist", "Plays"), caption = "Top 5 artists of 2022")
-                    kable(head(total_song_counts_23, 10), col.names = c("Song", "Artist", "Plays"), caption = "Top 10 songs of 2023")
-                    kable(head(total_artist_counts_23, 5), col.names = c("Artist", "Plays"), caption = "Top 5 artists of 2023")
-                    kable(head(total_song_counts_24, 10), col.names = c("Song", "Artist", "Plays"), caption = "Top 10 songs of 2024")
-                    kable(head(total_artist_counts_24, 5), col.names = c("Artist", "Plays"), caption = "Top 5 artists of 2024")
-                    kable(head(total_song_counts_25, 10), col.names = c("Song", "Artist", "Plays"), caption = "Top 10 songs of 2025")
-                    kable(head(total_artist_counts_25, 5), col.names = c("Artist", "Plays"), caption = "Top 5 artists of 2025")
-                </code></pre>
-                </div>
+listening_2020 <- dt_streaming[
+  ts >= ("2020-01-01T00:00:00Z") &
+  ts <= ("2020-12-31T23:59:59Z")
+]
 
-                <div class="box">
-                <center>
-                <img src="screenshots\Rapify top 2025.png" alt="Rapify top songs and artists of 2025" width="700">
-                </center>
-                </div>
+listening_2021 <- dt_streaming[
+  ts >= ("2021-01-01T00:00:00Z") &
+  ts <= ("2021-12-31T23:59:59Z")
+]
 
-                <center><h3> I wanted to achieve these results through
-                machine learning, but that proved incredibly difficult since I am not using numerical data. I was,
-                however, able to use machine learning to predict skipping patterns. Using the OneR package, I
-                was able to determine the likelihood of a song or artist being skipped with over 75% accuracy for
-                both parameters. While it would have been nice to get around 90% accuracy, that I know can be
-                achieved by using a smaller dataset or a stronger algorithm like Random Forest. </h3></center>
-                <div class="code_box">
-                <pre><code>
-                    # mild cleaning, I dont want songs to be included that I haven't listened to at LEAST 10 times
-                    skipped_songs <- streaming_history[streaming_history$song_title %in% names(which(table(streaming_history$song_title) >= 10)), ]
+listening_2022 <- dt_streaming[
+  ts >= ("2022-01-01T00:00:00Z") &
+  ts <= ("2022-12-31T23:59:59Z")
+]
 
-                    # ensure all variables are factors
-                    skipped_songs[] <- lapply(skipped_songs, function(x) {
-                    if (is.character(x) | is.logical(x)) factor(x) else x
-                    })
+listening_2023 <- dt_streaming[
+  ts >= ("2023-01-01T00:00:00Z") &
+  ts <= ("2023-12-31T23:59:59Z")
+]
 
-                    # removing columns that aren't neccesary
-                    skipped_songs$ts = NULL
-                    skipped_songs$ms_played = NULL
-                    skipped_songs$track_url = NULL
-                    skipped_songs$reason_start = NULL
-                    skipped_songs$reason_end = NULL
-                    skipped_songs$offline = NULL
-                    skipped_songs$shuffle = NULL
-                    skipped_songs$album_name = NULL
+listening_2024 <- dt_streaming[
+  ts >= ("2024-01-01T00:00:00Z") &
+  ts <= ("2024-12-31T23:59:59Z")
+]
 
-                    head(skipped_songs)
+listening_2025 <- dt_streaming[
+  ts >= ("2025-01-01T00:00:00Z") &
+  ts <= ("2025-12-31T23:59:59Z")
+]
+)
 
-                    # install.packages("OneR")
-                    library(OneR)
+# the total song counts for all time listening
+# confirm that the song name and artist are the same to ensure its a unique song and sort by descending order
+# install.packages("dplyr")
+library(dplyr)
+total_song_counts <- count(dt_streaming, song_title, artist_name, sort = TRUE)
 
-                    # using the OneR model to get my listening rules
-                    skipped_songs_1R <- OneR(skipped ~ song_title, data = skipped_songs)
+# knitr library so output can be pretty
+# install.packages("knitr")
+library(knitr)
+kable(head(total_song_counts, 20), col.names = c("Song", "Artist", "Plays"), caption = "Top 20 songs of all time")
 
-                    skipped_songs_pred <- predict(skipped_songs_1R, skipped_songs)
-                    table(actual = skipped_songs$skipped, predicted = skipped_songs_pred)
-                </code></pre>
-                </div>
+# the total artist counts for all time listening
+# sort by descending order and use knitr library so output can be pretty
+total_artist_counts <- count(dt_streaming, artist_name, sort = TRUE)
+kable(head(total_artist_counts, 10), col.names = c("Artist", "Plays"), caption = "Top 10 artists of all time")
+            </code></pre>
+        </details>
+    </div>
 
-                <div class="box">
-                <center>
-                <img src="screenshots\Rapify skip predictions.png" alt="" width="700">
-                </center>
-            </div>
-            <h3><center> Nevertheless, I met the course outcomes “Design and evaluate computing solutions that
-            solve a given problem using algorithmic principles and computer science practices and
-            standards appropriate to its solution while managing the trade-offs involved in design choices.“
-            by my use of machine learning packages like OneR, and “Design, develop, and deliver
-            professional-quality oral, written, and visual communications that are coherent, technically
-            sound, and appropriately adapted to specific audiences and contexts.” By my interpretation of
-            the results in a user friendly way, such as through tables and bulleted lists. </center></h3>
+    <div class="box">
+        <p>The above code produces the following results:</p>
+        <div class="image-grid">
+            <img src="https://file.garden/Z-9X7al_RynAMoGk/portfolio/Screenshot%202026-02-04%20172858.png"
+                 alt="Top 20 songs table produced by rapify" width="100%" loading="lazy">
+        </div>
+    </div>
+</section>
 
-            <center><h3>Want to view the full Rapify script for yourself? Visit the <a href="https://github.com/jahomii/jahomii.github.io/tree/main/RapifyML" target="_blank">Github Repository</a> to see everthing I wrote for this project. </h3>
-                <h3> Want to read more about the making of Rapify? Check out the <a href="RapifyML\Rapify Enhancements.pdf" target="_blank">Rapify Enhancements PDF</a>. </h3>
-                <h3>Want to see some of my other projects? <a href="index.html">Return Home</a> to see what else I am highlighting.</h3></center>
-            </div>
+<!-- FEATURES -->
+<section id="features" class="container">
+    <div class="code_box">
+        <details>
+            <summary>Click to view code</summary>
+            <pre><code>
+total_song_counts_16 <- count(listening_2016, song_title, artist_name, sort = TRUE)
+total_artist_counts_16 <- count(listening_2016, artist_name, sort = TRUE)
+total_song_counts_17 <- count(listening_2017, song_title, artist_name, sort = TRUE)
+total_artist_counts_17 <- count(listening_2017, artist_name, sort = TRUE)
+total_song_counts_18 <- count(listening_2018, song_title, artist_name, sort = TRUE)
+total_artist_counts_18 <- count(listening_2018, artist_name, sort = TRUE)
+total_song_counts_19 <- count(listening_2019, song_title, artist_name, sort = TRUE)
+total_artist_counts_19 <- count(listening_2019, artist_name, sort = TRUE)
+total_song_counts_20 <- count(listening_2020, song_title, artist_name, sort = TRUE)
+total_artist_counts_20 <- count(listening_2020, artist_name, sort = TRUE)
+total_song_counts_21 <- count(listening_2021, song_title, artist_name, sort = TRUE)
+total_artist_counts_21 <- count(listening_2021, artist_name, sort = TRUE)
+total_song_counts_22 <- count(listening_2022, song_title, artist_name, sort = TRUE)
+total_artist_counts_22 <- count(listening_2022, artist_name, sort = TRUE)
+total_song_counts_23 <- count(listening_2023, song_title, artist_name, sort = TRUE)
+total_artist_counts_23<- count(listening_2023, artist_name, sort = TRUE)
+total_song_counts_24 <- count(listening_2024, song_title, artist_name, sort = TRUE)
+total_artist_counts_24 <- count(listening_2024, artist_name, sort = TRUE)
+total_song_counts_25 <- count(listening_2025, song_title, artist_name, sort = TRUE)
+total_artist_counts_25 <- count(listening_2025, artist_name, sort = TRUE)
+...
+kable(head(total_song_counts_16, 10), col.names = c("Song", "Artist", "Plays"), caption = "Top 10 songs of 2016")
+kable(head(total_artist_counts_16, 5), col.names = c("Artist", "Plays"), caption = "Top 5 artists of 2016")
+kable(head(total_song_counts_17, 10), col.names = c("Song", "Artist", "Plays"), caption = "Top 10 songs of 2017")
+kable(head(total_artist_counts_17, 5), col.names = c("Artist", "Plays"), caption = "Top 5 artists of 2017")
+kable(head(total_song_counts_18, 10), col.names = c("Song", "Artist", "Plays"), caption = "Top 10 songs of 2018")
+kable(head(total_artist_counts_18, 5), col.names = c("Artist", "Plays"), caption = "Top 5 artists of 2018")
+kable(head(total_song_counts_19, 10), col.names = c("Song", "Artist", "Plays"), caption = "Top 10 songs of 2019")
+kable(head(total_artist_counts_19, 5), col.names = c("Artist", "Plays"), caption = "Top 5 artists of 2019")
+kable(head(total_song_counts_20, 10), col.names = c("Song", "Artist", "Plays"), caption = "Top 10 songs of 2020")
+kable(head(total_artist_counts_20, 5), col.names = c("Artist", "Plays"), caption = "Top 5 artists of 2020")
+kable(head(total_song_counts_21, 10), col.names = c("Song", "Artist", "Plays"), caption = "Top 10 songs of 2021")
+kable(head(total_artist_counts_21, 5), col.names = c("Artist", "Plays"), caption = "Top 5 artists of 2021")
+kable(head(total_song_counts_22, 10), col.names = c("Song", "Artist", "Plays"), caption = "Top 10 songs of 2022")
+kable(head(total_artist_counts_22, 5), col.names = c("Artist", "Plays"), caption = "Top 5 artists of 2022")
+kable(head(total_song_counts_23, 10), col.names = c("Song", "Artist", "Plays"), caption = "Top 10 songs of 2023")
+kable(head(total_artist_counts_23, 5), col.names = c("Artist", "Plays"), caption = "Top 5 artists of 2023")
+kable(head(total_song_counts_24, 10), col.names = c("Song", "Artist", "Plays"), caption = "Top 10 songs of 2024")
+kable(head(total_artist_counts_24, 5), col.names = c("Artist", "Plays"), caption = "Top 5 artists of 2024")
+kable(head(total_song_counts_25, 10), col.names = c("Song", "Artist", "Plays"), caption = "Top 10 songs of 2025")
+kable(head(total_artist_counts_25, 5), col.names = c("Artist", "Plays"), caption = "Top 5 artists of 2025")
+            </code></pre>
+        </details>
+    </div>
 
-            <center>
-            <a href="https://github.com/jahomii/jahomii.github.io/tree/main/RapifyML" target="_blank"><button>Github</button></a>
-            <a href="RapifyML\Rapify Enhancements.pdf" target="_blank"><button>Rapify ML PDF </button></a>
-            <a href="index.html"><button>Return Home</button></a>
-            </center>
-        </main>
+    <div class="box">
+        <div class="image-grid">
+            <img src="https://file.garden/Z-9X7al_RynAMoGk/portfolio/rapify%20top%202025"
+                 alt="Top 10 songs and artists of 2025 produced by rapify" width="100%" loading="lazy">
+        </div>
+    </div>
+
+    <div class="box">
+        <p>
+            Finally, as an additional challenge, I used machine learning to predict a users skipping habits. 
+            Using existing data in which songs were labelled "skipped: True" or "Skipped: False" I was able 
+            to build an algorithm that predicts what songs a user is most likely to let play out, with ~77% accuracy. 
+            <br><br>
+            The inaccuracies of this algorithm can likely be attributed to the size of the dataset. Most ML algorithms 
+            and libraries don't function nearly as well on larger datasets. 
+            <br><br>
+            I Initially planned to use another more robust algorithm such as Random Forest. Random Forest handles large 
+            skewed datasets far better than most algorithms. However, upon training the model, it ran for 30 minutes and still had not finished, 
+            so, I ultimately decided to go with something a little less intense, OneR.
+            <br><br>
+            Perhaps in the future I will run Random Forest on this data to compare the results. </p> 
+            <div class="code_box"> 
+                <details> 
+                    <summary>Click to view code</summary> 
+                    <pre><code> 
+# mild cleaning, I dont want songs to be included that I haven't listened to at LEAST 10 times
+skipped_songs <- streaming_history[streaming_history$song_title %in% names(which(table(streaming_history$song_title) >= 10)), ]
+
+# ensure all variables are factors
+skipped_songs[] <- lapply(skipped_songs, function(x) {
+  if (is.character(x) | is.logical(x)) factor(x) else x
+})
+
+# removing columns that aren't neccesary
+skipped_songs$ts = NULL
+skipped_songs$ms_played = NULL
+skipped_songs$track_url = NULL
+skipped_songs$reason_start = NULL
+skipped_songs$reason_end = NULL
+skipped_songs$offline = NULL
+skipped_songs$shuffle = NULL
+skipped_songs$album_name = NULL
+
+head(skipped_songs)
+
+# install.packages("OneR")
+library(OneR)
+
+# using the OneR model to get my listening rules
+skipped_songs_1R <- OneR(skipped ~ song_title, data = skipped_songs)
+
+skipped_songs_pred <- predict(skipped_songs_1R, skipped_songs)
+table(actual = skipped_songs$skipped, predicted = skipped_songs_pred)
+</code></pre> 
+</details> 
+</div> 
+<div class="box"> 
+    <div class="image-grid">
+        <img src="https://file.garden/Z-9X7al_RynAMoGk/portfolio/skipped%20songs.png" 
+        alt="Skipped songs model results" width="100%" loading="lazy"> 
+</div>
+</div>
+</section>
+
+<!-- CONCLUSION -->
+<section id="conclusion" class="container" style="display: flex;">
+    <div class="box">
+        <p>
+            The code for Rapify ML is publicly available on my
+            <a href="https://github.com/jahomii/jahomii.github.io/tree/main/RapifyML" target="_blank">GitHub</a>.
+            While it is unlikely that I will return to this project, I am proud of the work I accomplished here, 
+            and still feel a pull to try and make Random Forest work.
+        </p>
+        <hr>
+        <p><center>
+            Want to read more about the making of Rapify ML?
+            <a href="RapifyML/Rapify Enhancements.pdf" target="_blank">Check out the enhancements PDF</a>.
+        </center></p>
+    </div>
+</section>
+
+<section id="footer" class="container" style="display:flex; justify-content:center;">
+    <div class="box" style="display:flex; justify-content:center; background-color: black;">
+        <div class="box">
+            <p>Like what you see? <br> Please reach out. <br> I'm actively seeking remote work. <br><br> NH, USA</p>
+        </div>
+        <div class="box">
+            <p>Email: <br><br> <a href="mailto:jahomii.art@gmail.com&subject=Saw%20Your%20Portfolio">jahomii.art@gmail.com</a></p>
+        </div>
+        <div class="box">
+            <p>Socials: <br><br> <a href="https://www.linkedin.com/in/jaiden-blanchard-a430a9363/" target="_blank" class="linkedin-link"><img src="https://file.garden/Z-9X7al_RynAMoGk/portfolio/linkedin-logo-by-Vexels.png" alt="LinkedIn Logo" width="auto" height="30px"></a> 
+                <a href="https://github.com/jahomii" target="_blank" class="github-link"><img src="https://file.garden/Z-9X7al_RynAMoGk/portfolio/github-icon-lg.png" alt="GitHub Logo" height="30"> </a>
+        </div>
+    </div>
+</section>
 </body>
 </html>
