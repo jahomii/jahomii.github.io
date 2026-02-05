@@ -1,159 +1,104 @@
-@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap');
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+<title>Jaiden Blanchard</title>
+<h1>Jaiden Blanchard</h1>
+<h2>Project Portfolio</h2>
+</head>
+<body>
 
+<section id="summary" class="container" style="display: flex;">
+    <img src="https://file.garden/Z-9X7al_RynAMoGk/portfolio/portfolio-photo-1.jpg" alt="Jaiden Blanchard Headshot" width="auto" height="500px">
+    <div class="box">
+        <h2><mark style="background-color: #232327; color: #ffffff;"><strong>Summary</strong></mark></h2>
+        <p>Detail-oriented Computer Science graduate and aspiring data professional with hands-on experience 
+        in data cleaning, validation, and quality assurance. Strong interest in data management, analysis, 
+        and machine learning, with a focus on ensuring data accuracy, consistency, and reliability.</p>
+   </div>
+</section>
 
-body { font-family: 'Libre Baskerville', serif; 
-    background-color: #eff1e3;
-}
+<section id="education" class="container" style="display: flex;">
+    <div class="box" style="width: 50%;">
+        <h2><mark style="background-color: #232327; color: #ffffff;"><strong>Skills & Strengths</strong></mark></h2>
+        <p><mark style="background-color: #ffffff;"><strong>Programming & Scripting: </strong></mark>
+            <blockquote>Python, R, Java, C++, Bash, Windows CLI</blockquote>
 
-p {
-    font-family: 'Libre Baskerville', serif;
-    font-size: 1.3em;
-}
+        <p><mark style="background-color: #ffffff;"><strong>Web & Databases:</strong></mark>
+            <blockquote>SQL, MySQL, HTML/CSS, MongoDB, WordPress</blockquote>
 
-h1{
-    font-size: xxx-large;
-}
+        <p><mark style="background-color: #ffffff;"><strong>Development Tools & Environments:</strong></mark>
+            <blockquote>Git/GitHub, Docker, Jupyter, RStudio, VS Code</blockquote>
 
-h2 {
-    font-family: 'Libre Baskerville', serif;
-    font-size: xx-large;
-}
+        <p><mark style="background-color: #ffffff;"><strong>Testing & API's:</strong></mark>
+            <blockquote>Postman, JUnit</blockquote>
 
-section {
-    margin-bottom: 20px;
-    align-self: center;
-}
+        <p><mark style="background-color: #ffffff;"><strong>Productivity Tools:</strong></mark>
+            <blockquote>Excel, Google Sheets</blockquote>
+    </div>
+        <div class="box" style="width: 50%;">
+        <h2><mark style="background-color: #232327; color: #ffffff;"><strong>Education</strong></mark></h2>
+        <p><mark style="background-color: #ffffff;"><strong>Southern New Hampshire University</strong></mark> <br>
+            <blockquote>Bachelor of Science in Computer Science <br>
+            December 2025 | GPA – 3.9 </p></blockquote>
+        </p>
+    </div>
+</section>
 
-.box {
-    border: none;
-    padding: 15px;
-    margin: 20px;
-    background-color: none;
-    align-content: center;
-}
+<section id="projects" class="container" style="display: flex;">
+    <div class="box" style="align-items: right;">
+        <h1><mark style="background-color: #eff1e3; color: #000000;"><strong>Projects</strong></mark></h2>
+            <h2>Wrapify</h2>
+            <p>Python, Jupyter Notebook, JSON, CSV, SeaBorn
+            <blockquote>
+                <li>Reversed-engineered Spotify Wrapped</li>
+                <li>Consolidated multiple JSON files into a single, date-sorted dataset and converted it to CSV format</li>
+                <li>Applied GroupBy operations to generate statistical metrics from a user’s streaming history</li>
+                <li>Visualized key metrics using the Seaborn library</li></p>
+            </blockquote>
+            <a href="wrapify.html" class="button-link"><button class="button">Explore Wrapify</button></a>
+    </div>
+</section>
 
-.container {
-  width: 60%;
-  margin: auto;
-}
+<section id="projects" class="container" style="display: flex;">
+    <div class="box" style="align-items: left;">
+            <h2>Rapify ML</h2>
+            <p>R, VS Code, Jupyter Notebook, CSV
+            <blockquote>
+                <li>Wrapify, but with R</li>
+                <li>Used R libraries to clean, organize, and visualize datasets</li>
+                <li>Built a machine learning model to predict the likelihood of a user skipping certain songs</li>
+            </blockquote>
+            <a href="Rapify.html" class="button-link"><button class="button">Explore Rapify ML</button></a>
+    </div>
+</section>
 
-hr {
-    color: #eff1e3;
-}
+<section id="projects" class="container" style="display: flex;">
+    <div class="box" style="align-items: left;">
+            <h2>Paint2</h2>
+            <p>Python, VS Code
+            <blockquote>
+                <li>Python lists and mathematical concepts</li>
+                <li>Calculate the gallons of paint required to paint any wall or room</li>
+            </blockquote>
+            <a href="Paint2.html" class="button-link"><button class="button">Explore Paint2</button></a>
+    </div>
+</section>
 
-blockquote {
-    margin: 2;
-    padding: 0;
-    font-size: 1.3em;
-}
+<section id="footer" class="container" style="display:flex; justify-content:center;">
+    <div class="box" style="display:flex; justify-content:center; background-color: black;">
+        <div class="box">
+            <p>Like what you see? <br> Please reach out. <br> I'm actively seeking remote work. <br><br> NH, USA</p>
+        </div>
+        <div class="box">
+            <p>Email: <br><br> <a href="mailto:jahomii.art@gmail.com&subject=Saw%20Your%20Portfolio">jahomii.art@gmail.com</a></p>
+        </div>
+        <div class="box">
+            <p>Socials: <br><br> <a href="https://www.linkedin.com/in/jaiden-blanchard-a430a9363/" target="_blank" class="linkedin-link"><img src="https://file.garden/Z-9X7al_RynAMoGk/portfolio/linkedin-logo-by-Vexels.png" alt="LinkedIn Logo" width="auto" height="30px"></a> 
+                <a href="https://github.com/jahomii" target="_blank" class="github-link"><img src="https://file.garden/Z-9X7al_RynAMoGk/portfolio/github-icon-lg.png" alt="GitHub Logo" height="30"> </a>
+        </div>
+    </div>
+</section>
 
-#projects {
-    background-color: #000000;
-    color: #ffffff;
-    width: 100%;
-}
-
-#footer {
-    background-image: url('https://file.garden/Z-9X7al_RynAMoGk/portfolio/brick%20wall.jpg');
-    background-size: cover;
-    background-position: center;
-    color: #ffffff;
-    text-align: center;
-    padding: 10px 0;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-}
-
-li {
-    margin: 2;
-    padding: 0;
-}
-
-.button {
-    background-color: #eff1e3;
-    font-family: 'Libre Baskerville', serif;
-    color: #000000;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    border: none;
-    border-radius: 4px;
-    width: 100%;
-    transition: all 0.3s ease;
-}
-
-.button:hover {
-    color: #ffffff;
-    cursor: pointer;
-    background: #232327;
-    transform: scale(1.05);
-}
-
-a {
-    color: #71944e;
-    text-decoration: none;
-    transition: all 0.5s ease;
-}
-
-a:hover {
-    color: #ffffff;
-    text-decoration: underline;
-    background-color: #232327;
-}
-
-.github-link img:hover {
-  content: url("https://file.garden/Z-9X7al_RynAMoGk/portfolio/github-white-icon.png");
-  transform: scale(1.1);
-}
-
-.linkedin-link img:hover {
-  content: url("https://file.garden/Z-9X7al_RynAMoGk/portfolio/linked%20in%20logo%20white");
-  transition: all 0.9s ease;
-  transform: none;
-}
-
-.code_box {
-  background: linear-gradient(to bottom, #000000, #232327);
-  color:#ffffff;
-  padding: 10px;
-}
-
-summary {
-    cursor: pointer;
-    font-family: 'Libre Baskerville', serif;
-    font-size: x-large;
-    transition: all 0.3s ease;
-}
-
-summary:hover {
-    color: #8bab6a;
-}
-
-#conclusion {
-    background-color: #000000;
-    color: #ffffff;
-    width: 100%;
-}
-
-nav {
-    margin-bottom: 20px;
-    text-align: left;
-}
-.button-link {
-    font-family: 'Libre Baskerville', serif;
-    color: #000000;
-    text-decoration: none;
-    font-size: 16px;
-    transition: all 0.3s ease;
-}
-
-.button-link:hover {
-    color: #ffffff;
-    cursor: pointer;
-    background: #232327;
-    transform: scale(1.05);
-}
+</body>
+</html> 
