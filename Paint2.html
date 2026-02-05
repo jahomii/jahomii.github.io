@@ -3,254 +3,292 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paint2</title>
+    <title>Jaiden Blanchard – Paint2</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div id="container">
-    <div id="flex">
-        <!-- MAIN CONTENT -->
-        <main>
-            <h1 class="box"><center>Paint2</center></h1>
-            <hr>
+<header class="container">
+    <h1>Paint2</h1>
+    <hr>
+</header>
 
-            <center>
-            <a href="https://github.com/jahomii/jahomii.github.io/tree/main/Paint2" target="_blank"><button>Github</button></a>
-            <a href="Paint2\Paint2 Enhancements.pdf" target="_blank"><button>Paint2 PDF</button></a>
-            <a href="index.html"><button>Return Home</button></a>
-            </center>
+<nav class="container">
+    <ul>
+        <li><a href="index.html">Return Home</a></li>
+    </ul>
+</nav>
 
-            <div class="box">
-                <center><h3>The original artifact, Paint1, is a program designed to calculate how much paint is needed to
-                fully coat one wall. It was created on April 18th, 2019, for my class IT 145 Foundation in
-                Application Development. I chose this artifact for my portfolio because it is one of the very first
-                projects I ever built, and I wanted to demonstrate my dedication to improving my existing skills,
-                and my ability to make a simple program far more versatile. </h3>
-                <h3> This artifact, now called Paint2, is an improved version of the original program. It has
-                become more dynamic, allowing users to calculate the gallons of paint needed to paint a whole
-                room if needed, as well as including how many coats they intend to do. There is also proper error
-                handling, which stops users from inputting negative values or strings without closing the
-                program. </h3></center>
+<!-- INTRODUCTION -->
+<section id="introduction" class="container">
+    <div class="box">
+        <p>
+            Paint2 is a complete redo of one of my very first coding projects. The original, Paint1, was created in April 
+            of 2019 for my first coding course in college. Built in Java, Paint1 is meant to calculate how many gallons of 
+            paint are required to paint a wall. However, it being my first project, it is both rudimentary and unfunctional. 
+            there are naming issues with some elements and others are called in the wrong spots. When corrected, it works in 
+            a very basic way. 
+        </p>
+    </div>
 
-                <div class="code_box">
-                <pre><code>
-                #**********************************************************
-                # This section is meant to receive the number of walls the
-                # user will paint.
-                #**********************************************************
+    <div class="code_box">
+        <details>
+            <summary>Click to view code original Paint1 code</summary>
+            <pre><code>
+import java.util.Scanner;
 
-                while True:
-                    try: # ask for number of walls
-                        wall_count = int(input("How many walls do you wish to paint? "))
-                        # positive whole numbers only
-                        if wall_count <= 0:
-                            print("Invalid entry. Enter a positive value.")
-                            continue
-                    except ValueError:
-                        print("Invalid entry. Enter a numerical value.")
+public class Paint1 {
+
+    public static void main(String[] args) {
+        Scanner scnr = new Scanner(System.in);
+        double wallHeight = 0.0;
+        double wallWidth = 0.0;
+        double wallArea = 0.0;
+        double gallonsPaintNeeded = 0.0;
+        
+        final double squareFeetPerGallons = 350.0;
+        
+        // Implement a do-while loop to ensure input is valid
+        // Prompt user to input wall's height
+        System.out.println("Enter wall height (feet): ");
+        wallHeight = scnr.nextDouble();
+
+        // Implement a do-while loop to ensure input is valid
+        // Prompt user to input wall's width
+        System.out.println("Enter wall width (feet): ");
+        wallWidth = scnr.nextDouble();
+
+        // Calculate and output wall area
+        wallArea = wallHeight * wallWidth;
+        System.out.println("Wall area:  square feet");
+
+        // Calculate and output the amount of paint (in gallons) needed to paint the wall
+        gallonsPaintNeeded = wallArea/squareFeetPerGallons;
+        System.out.println("Paint needed: " + gallonsPaintNeeded + " gallons");
+
+    }
+}
+            </code></pre>
+        </details>
+    </div>
+</section>
+
+<!-- CHALLENGES -->
+<section id="challenges" class="container">
+    <div class="box">
+        <p>
+            Paint2 was a test for myself to see my improvement over the years of working on coding projects throughout college. 
+            Built in November of 2025, Paint2 was made in Python and does slightly more than Paint1, calculating the paint 
+            required to cover multiple input walls of different widths
+        </p>
+    </div>
+
+    <div class="code_box">
+        <details>
+            <summary>Click to view code</summary>
+            <pre><code>
+from PaintNeeded import PaintNeeded
+
+# list to hold wall_width variables
+wall_list = []
+window_list = []
+door_list = []
+
+#**********************************************************
+# This section is meant to receive the number of walls the
+# user will paint.
+#**********************************************************
+
+while True:
+    try: # ask for number of walls
+        wall_count = int(input("How many walls do you wish to paint? "))
+        # positive whole numbers only
+        if wall_count <= 0:
+            print("Invalid entry. Enter a positive value.")
+            continue
+    except ValueError:
+        print("Invalid entry. Enter a numerical value.")
+        continue
+    break
+
+#**********************************************************
+# Recieve individiual wall inputs and one room height 
+# input. 
+#**********************************************************
+
+for wall in range(wall_count):
+    while True:
+        try:
+            wall_width = int(input(f"Enter the width of your wall #{wall+1} (feet): "))
+            # positive whole numbers only
+            if wall_width <= 0:
+                print("Error: wall width cannot be zero or less")
+                continue
+            else: # valid entry? add it to the list
+                wall_list.append(wall_width)
+        except ValueError:
+            print("Invalid entry. Enter a numerical value.")
+            continue
+        break
+# get the height of the room
+while True:
+    try: # only run if there is a wall width of a positive whole number
+        if wall_width > 0:
+            wall_height = int(input("Enter the height of your wall (feet): "))
+            # positive whole numbers only
+            if wall_height <= 0:
+                print("Error: wall height cannot be zero or less")
+                continue
+            break
+    except ValueError:
+        print("Invalid entry. Enter a numerical value.")
+        continue
+            </code></pre>
+        </details>
+    </div>
+
+    <div class="box">
+        <p>Paint2 also allows you to toggle ceiling inputs, meaning users who want to paint ceilings can do so without having to 
+            calculate the ceiling area manually.</p>
+    </div>
+</section>
+
+<section id="features" class="container">
+    <div class="code_box">
+        <details>
+            <summary>Click to view code</summary>
+            <pre><code>
+#**********************************************************
+# ask if the user will be painting their ceiling.
+# if yes, recieve the width and length
+# if no, move to next section
+#**********************************************************
+
+while True:
+    try: # determine if the user is painting their ceiling
+        ceiling_yn = input("Will you be painting your ceiling? [Y/N] ")
+        # if lowercase input is received, convert it to uppercase
+        if ceiling_yn == ceiling_yn.lower():
+            ceiling_yn = ceiling_yn.upper()
+        # if yes, get the number
+        if ceiling_yn == "Y":
+            try:
+                ceiling_length = int(input("Enter the length of your ceiling (feet): "))
+                # positive whole numbers only
+                if ceiling_length <= 0:
+                    print("Invalid entry. Enter a positive value.")
+                    continue
+                if ceiling_length > 0:
+                    ceiling_width = int(input("Enter the width of your ceiling (feet): "))
+                    # positive whole numbers only
+                    if ceiling_width <= 0:
+                        print("Invalid entry. Enter a positive value.")
                         continue
-                    break
-                
-                #**********************************************************
-                # Recieve individiual wall inputs and one room height 
-                # input. 
-                #**********************************************************
+            except ValueError:
+                print("Invalid entry. Enter a numerical value.")
+                continue
+            break
+        # not painting the ceiling, move to next section
+        if ceiling_yn == "N":
+            break
+        else:
+            print("Error: Invalid input. Please type 'Y' or 'N' ")
+            continue
+    except ValueError:
+        print("Invalid entry. Enter a numerical value.")
+        continue
+            </code></pre>
+        </details>
+    </div>
 
-                for wall in range(wall_count):
-                    while True:
-                        try:
-                            wall_width = int(input(f"Enter the width of your wall #{wall+1} (feet): "))
-                            # positive whole numbers only
-                            if wall_width <= 0:
-                                print("Error: wall width cannot be zero or less")
-                                continue
-                            else: # valid entry? add it to the list
-                                wall_list.append(wall_width)
-                        except ValueError:
-                            print("Invalid entry. Enter a numerical value.")
-                            continue
-                        break
-                # get the height of the room
-                while True:
-                    try: # only run if there is a wall width of a positive whole number
-                        if wall_width > 0:
-                            wall_height = int(input("Enter the height of your wall (feet): "))
-                            # positive whole numbers only
-                            if wall_height <= 0:
-                                print("Error: wall height cannot be zero or less")
-                                continue
-                            break
-                    except ValueError:
-                        print("Invalid entry. Enter a numerical value.")
-                        continue
-                </code></pre>
-                </div>
+    <div class="box">
+        <p>Finally, Paint2 also removes the surface area that is not painted, such as windows and doors, from the total wall area calculation.
+            so if you have a wall with a door and two windows, Paint2 will subtract the area of those elements from the total wall area before 
+            calculating. What's more, I ensured that negative values aren't possible, meaning if you input a window larger than the orignal 
+            wall input, an error is thrown.
+        </p>
+            <div class="code_box"> 
+                <details> 
+                    <summary>Click to view code</summary> 
+                    <pre><code> 
+#**********************************************************
+# Calculate the total area for the walls, windows, doors,
+# and ceiling, mulltiplied by coat count, and divide by 
+# sq ft per gallon, and recieve the final output
+#**********************************************************
 
-            <center><h3>This program will also ask about the existence of doors and windows, which will
-                remove their surface area from the final output.</h3></center>
-            
-            <div class="code_box">
-                <pre><code>
-                    #**********************************************************
-                    # Ask about the existence of windows
-                    # if yes, the user will input an individual width for each window
-                    # and one overall height input
-                    # if no, skip this section
-                    #**********************************************************
+# the sum of every wall weidth multiplied by the wall height
+total_wall_area = sum(wall_list) * wall_height
 
-                    while True:
-                        try: # determine if the user has windows in their room
-                            windows_yn = input("Are their windows in your room? [Y/N] ")
-                            # if lowercase input is received, convert it to uppercase
-                            if windows_yn == windows_yn.lower():
-                                windows_yn = windows_yn.upper()
-                            # if yes, get the number
-                            if windows_yn == "Y":
-                                try:  # ask for number of windows
-                                    window_count = int(input("How many windows are in your room? "))
-                                    # positive whole numbers only
-                                    if window_count <= 0:
-                                        print("Invalid entry. Enter a positive value.")
-                                        continue
-                                    for window in range(window_count):
-                                        while True:
-                                            try:
-                                                window_width = int(input(f"Enter the width of your window #{window + 1} (feet): "))
-                                                # positive whole numbers only
-                                                if window_width <= 0:
-                                                    print("Error: window width cannot be zero or less")
-                                                    continue
-                                                # window widths must be smaller than or equal to wall widths
-                                                if window_width > wall_width:
-                                                    print("Error: window width cannot exceed wall width")
-                                                    continue
-                                                else:  # valid entry? add it to the list
-                                                    window_list.append(window_width)
-                                            except ValueError:
-                                                print("Invalid entry. Enter a numerical value.")
-                                                continue
-                                            break
-                                    # get the height of the windows
-                                    while True:
-                                        try: # only run if there is a window width of a positive whole number
-                                            if window_width > 0:
-                                                # receive the height input
-                                                window_height = int(input("Enter the height of your window(s) (feet): "))
-                                                # positive whole numbers only
-                                                if window_height <= 0:
-                                                    print("Error: window height cannot be zero or less")
-                                                    continue
-                                                # window heights must be smaller than or equal to wall heights
-                                                if window_height > wall_height:
-                                                    print("Error: window height cannot exceed wall height")
-                                                    continue
-                                                break
-                                        except ValueError:
-                                            print("Invalid entry. Enter a numerical value.")
-                                            continue
-                                except ValueError:
-                                    print("Invalid entry. Enter a numerical value.")
-                                    continue
-                                break
-                            # No windows, move to next section
-                            if windows_yn == "N":
-                                window_count = 0
-                                break
-                            else:
-                                print("Error: Invalid input. Please type 'Y' or 'N' ")
-                                continue
-                        except ValueError:
-                            print("Invalid entry. Enter a numerical value.")
-                            continue
-                </code></pre>
-                </div>
+# the area of the ceiling, only calculated if user answered "Y" to ceiling
+total_ceiling_area = 0
+if ceiling_yn == "Y":
+    total_ceiling_area = ceiling_length * ceiling_width
 
-            <center><h3>Additionally, a user can input their ceiling dimensions which will 
-                be included in the final calculation.</h3></center>
+# the area of the windows, only calculated if user answered "Y" to windows
+total_window_area = 0
+if windows_yn == "Y":
+    total_window_area = sum(window_list) * window_height
+    if total_window_area > total_wall_area:
+        print("Window area is larger than wall area. You may want to consider recalculating.")
+        
 
-            <div class="code_box">
-                <pre><code>
-                    #**********************************************************
-                    # ask if the user will be painting their ceiling.
-                    # if yes, recieve the width and length
-                    # if no, move to next section
-                    #**********************************************************
+# the area of the doors, only calculated if user answered "Y" to doors
+total_door_area = 0
+if doors_yn == "Y":
+    total_door_area = sum(door_list) * door_height
+    if total_door_area > total_wall_area:
+        print("Door area is larger than wall area. You may want to consider recalculating.")
 
-                    while True:
-                        try: # determine if the user is painting their ceiling
-                            ceiling_yn = input("Will you be painting your ceiling? [Y/N] ")
-                            # if lowercase input is received, convert it to uppercase
-                            if ceiling_yn == ceiling_yn.lower():
-                                ceiling_yn = ceiling_yn.upper()
-                            # if yes, get the number
-                            if ceiling_yn == "Y":
-                                try:
-                                    ceiling_length = int(input("Enter the length of your ceiling (feet): "))
-                                    # positive whole numbers only
-                                    if ceiling_length <= 0:
-                                        print("Invalid entry. Enter a positive value.")
-                                        continue
-                                    if ceiling_length > 0:
-                                        ceiling_width = int(input("Enter the width of your ceiling (feet): "))
-                                        # positive whole numbers only
-                                        if ceiling_width <= 0:
-                                            print("Invalid entry. Enter a positive value.")
-                                            continue
-                                except ValueError:
-                                    print("Invalid entry. Enter a numerical value.")
-                                    continue
-                                break
-                            # not painting the ceiling, move to next section
-                            if ceiling_yn == "N":
-                                break
-                            else:
-                                print("Error: Invalid input. Please type 'Y' or 'N' ")
-                                continue
-                        except ValueError:
-                            print("Invalid entry. Enter a numerical value.")
-                            continue
-                </code></pre>
-            </div>
-            <div>
-            <center><h3>Once the user has input all of their information, we can view the results.</h3></center>
-            </div>
+total_area = total_wall_area + total_ceiling_area - total_window_area - total_door_area
+total_area = max(0, total_area)  # to prevent negative area results
+</code></pre> 
+</details> 
+</div> 
+<div class="box"> 
+    <p>
+        The final surface area calculation is multiplied by the number of coats the user wants to apply, and the results are recieved.
+    </p>
+    <div class="box"> 
+    <div class="image-grid">
+        <img src="https://file.garden/Z-9X7al_RynAMoGk/portfolio/Paint2%20results" 
+        alt="Paint2 results" width="100%" loading="lazy"> 
+</div>
+</div>
+</div>
+</section>
 
-            <div class="box">
-                <center>
-                <img src="screenshots\paint2 run results.png" alt="final output of the Paint2 program" width="700">
-                </center>
-            </div>
-            <center><h3> I faced quite a few challenges when it came to error handling. I wanted my code to be robust,
-            and capable of handling all types of input without throwing an exception and stopping the
-            program. It began with simpler steps of error handling, such as only running a module when a
-            certain criterion was met. For example, only accepting wall widths IF the wall count was above
-            0. But then came the issue of string input. The program would just stop running if you input
-            anything other than a numerical value, and through much trial and error I came across <a href="https://www.datacamp.com/tutorial/python-user-input" target="_blank">this
-            tutorial</a> on error handling, where try and exception statements were used to validate input. This
-            changed my program completely, and you could input as many strings as you wanted, and the
-            program will continue to prompt you for the right information. </h3></center>
+<!-- CONCLUSION -->
+<section id="conclusion" class="container" style="display: flex;">
+    <div class="box">
+        <p>
+            The code for Paint2 is publicly available on my
+            <a href="https://github.com/jahomii/jahomii.github.io/tree/main/Paint2" target="_blank">GitHub</a>.
+            This project is a testament to how far I've come as a programmer, and I'm excited for the time in which I decide to 
+            make a Paint3.
+        </p>
+        <hr>
+        <p><center>
+            Want to read more about the making of Paint2?
+            <a href="Paint2/Paint2 Enhancements.pdf" target="_blank">Check out the enhancements PDF</a>.
+        </center></p>
+    </div>
+</section>
 
-            <center><h3> I met the course outcome, “Demonstrate an ability to use well-founded and
-            innovative techniques, skills, and tools in computing practices for the purpose of implementing
-            computer solutions that deliver value and accomplish industry-specific goals.” By building a
-            more versatile program than my original, but I also would argue I met a separate, unintended
-            outcome due to my error handling: “Develop a security mindset that anticipates adversarial
-            exploits in software architecture and designs to expose potential vulnerabilities, mitigate design
-            flaws, and ensure privacy and enhanced security of data and resources.”
-            </h3></center>
-
-            <center><h3> Want to try out Paint2? Check out the <a href="https://github.com/jahomii/jahomii.github.io/tree/main/Paint2" target="_blank">Github Repository</a>.</h3>
-                <h3> Want to read more about the making of Rapify? Check out the <a href="Paint2\Paint2 Enhancements.pdf" target="_blank">Paint2 Enhancements PDF</a>. </h3>
-                <h3> Want to see some of my other projects? <a href="index.html">Return Home</a> to see what else I am highlighting.</h3></center>
-            </div>
-
-            <center>
-            <a href="https://github.com/jahomii/jahomii.github.io/tree/main/Paint2" target="_blank"><button>Github</button></a>
-            <a href="Paint2\Paint2 Enhancements.pdf" target="_blank"><button>Paint2 PDF</button></a>
-            <a href="index.html"><button>Return Home</button></a>
-            </center>
-        </main>
+<section id="footer" class="container" style="display:flex; justify-content:center;">
+    <div class="box" style="display:flex; justify-content:center; background-color: black;">
+        <div class="box">
+            <p>Like what you see? <br> Please reach out. <br> I'm actively seeking remote work. <br><br> NH, USA</p>
+        </div>
+        <div class="box">
+            <p>Email: <br><br> <a href="mailto:jahomii.art@gmail.com&subject=Saw%20Your%20Portfolio">jahomii.art@gmail.com</a></p>
+        </div>
+        <div class="box">
+            <p>Socials: <br><br> <a href="https://www.linkedin.com/in/jaiden-blanchard-a430a9363/" target="_blank" class="linkedin-link"><img src="https://file.garden/Z-9X7al_RynAMoGk/portfolio/linkedin-logo-by-Vexels.png" alt="LinkedIn Logo" width="auto" height="30px"></a> 
+                <a href="https://github.com/jahomii" target="_blank" class="github-link"><img src="https://file.garden/Z-9X7al_RynAMoGk/portfolio/github-icon-lg.png" alt="GitHub Logo" height="30"> </a>
+        </div>
+    </div>
+</section>
 </body>
 </html>
