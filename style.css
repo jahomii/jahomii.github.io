@@ -157,3 +157,13 @@ nav {
     background: #232327;
     transform: scale(1.05);
 }
+
+/* Styles for screens up to 768px wide */
+@media (max-width: 768px) {
+    /* Mobile-specific styles */
+}
+
+/* Styles for screens wider than 768px */
+@media (min-width: 769px) {
+    /* Desktop-specific styles */
+}
