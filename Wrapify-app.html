@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wrapify – Interactive Spotify Insights</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Page-specific layout tweaks on top of your existing style.css */
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #111 0, #050505 45%, #000 100%);
+      color: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page-shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 3rem;
+      flex: 1 0 auto;
+    }
+
+    header h1 {
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+
+    header p.subtitle {
+      margin: 0.25rem 0 0.75rem;
+      max-width: 40rem;
+      line-height: 1.5;
+      color: #cfcfcf;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+      align-items: center;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #bdbdbd;
+      background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      backdrop-filter: blur(10px);
+    }
+
+    .upload-card {
+      margin-top: 2rem;
+      border-radius: 1rem;
+      padding: 1.5rem 1.5rem 1.75rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: radial-gradient(circle at top left, rgba(0,255,135,0.1), transparent 55%) rgba(10,10,10,0.92);
+      box-shadow: 0 18px 60px rgba(0,0,0,0.7);
+    }
+
+    .upload-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.5fr);
+      gap: 1.5rem;
+    }
+
+    .upload-instructions p {
+      margin: 0.5rem 0;
+      line-height: 1.6;
+      font-size: 0.95rem;
+      color: #dcdcdc;
+    }
+
+    .upload-instructions ol {
+      padding-left: 1.25rem;
+      margin: 0.35rem 0 0.5rem;
+      font-size: 0.9rem;
+      color: #bfbfbf;
+    }
+
+    .upload-target {
+      border-radius: 0.9rem;
+      padding: 1.15rem 1.1rem;
+      border: 1px dashed rgba(255,255,255,0.3);
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: flex-start;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color 120ms ease-out, background-color 120ms ease-out, transform 80ms ease-out;
+    }
+
+    .upload-target:hover {
+      border-color: rgba(0,255,135,0.75);
+      background: rgba(0,0,0,0.6);
+      transform: translateY(-1px);
+    }
+
+    .upload-target.drag-over {
+      border-style: solid;
+      border-color: rgba(0,255,135,0.95);
+      box-shadow: 0 0 0 1px rgba(0,255,135,0.3);
+      background: radial-gradient(circle at top, rgba(0,255,135,0.12), rgba(0,0,0,0.9));
+    }
+
+    .upload-target-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #e7e7e7;
+    }
+
+    .upload-target-subtitle {
+      font-size: 0.82rem;
+      color: #bfbfbf;
+    }
+
+    .upload-target small {
+      font-size: 0.75rem;
+      color: #929292;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.16rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #b5b5b5;
+    }
+
+    .status-text {
+      font-size: 0.82rem;
+      color: #bfbfbf;
+    }
+
+    .status-text strong {
+      color: #fff;
+    }
+
+    .results-shell {
+      margin-top: 2.25rem;
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .results-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.4fr);
+      gap: 1.25rem;
+    }
+
+    .results-card {
+      border-radius: 0.9rem;
+      padding: 1rem 1.1rem 1.15rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: radial-gradient(circle at top left, rgba(0,255,200,0.08), rgba(0,0,0,0.94));
+      min-height: 0;
+    }
+
+    .results-card h2 {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin: 0 0 0.75rem;
+      color: #e8e8e8;
+    }
+
+    .results-card p {
+      margin: 0.25rem 0;
+      font-size: 0.88rem;
+      color: #cccccc;
+    }
+
+    .results-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 0.75rem;
+      margin-bottom: 0.35rem;
+      font-size: 0.8rem;
+      color: #a9a9a9;
+    }
+
+    .tables-grid {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .table-wrapper {
+      border-radius: 0.7rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(5,5,5,0.9);
+      overflow: hidden;
+    }
+
+    .table-wrapper header {
+      padding: 0.45rem 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .table-wrapper header h3 {
+      margin: 0;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      color: #e2e2e2;
+    }
+
+    .chart-block {
+      padding: 0.65rem 0.75rem 0.85rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.01);
+    }
+
+    .hbar-chart {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .hbar-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 2.2fr) minmax(0, 0.65fr);
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .hbar-label {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .hbar-label .main {
+      font-size: 0.82rem;
+      color: #ececec;
+      line-height: 1.2;
+    }
+
+    .hbar-label .sub {
+      font-size: 0.72rem;
+      color: #a9a9a9;
+      line-height: 1.2;
+      margin-top: 0.12rem;
+    }
+
+    .hbar-track {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    .hbar-bar {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(77,255,181,0.9), rgba(0,255,200,0.65));
+      width: 0%;
+    }
+
+    .hbar-value {
+      justify-self: end;
+      font-size: 0.78rem;
+      color: #e6e6e6;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 520px) {
+      .hbar-row {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr);
+        grid-auto-rows: auto;
+      }
+      .hbar-value {
+        grid-column: 1 / -1;
+        justify-self: start;
+        margin-top: -0.25rem;
+      }
+    }
+
+    .year-select {
+      background: rgba(15,15,15,0.9);
+      color: #f5f5f5;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      font-size: 0.8rem;
+      padding: 0.28rem 0.6rem;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+
+    th, td {
+      padding: 0.4rem 0.6rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    th {
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.72rem;
+      color: #bfbfbf;
+      background: rgba(255,255,255,0.02);
+    }
+
+    tbody tr:nth-child(even) {
+      background: rgba(255,255,255,0.02);
+    }
+
+    tbody tr:hover {
+      background: rgba(0,255,135,0.07);
+    }
+
+    .muted {
+      color: #8b8b8b;
+    }
+
+    .accent {
+      color: #4dffb5;
+    }
+
+    @media (max-width: 900px) {
+      .upload-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .results-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .upload-card {
+        padding: 1.25rem 1.1rem 1.4rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header>
+      <h1>Turn Your Spotify Archive into Wrapify Insights</h1>
+      <p class="subtitle">
+        Drop in your full Spotify streaming history and get instant breakdowns of your
+        top songs and artists by year
+      </p>
+    </header>
+
+    <section class="upload-card" aria-labelledby="upload-title">
+      <div class="upload-grid">
+        <div class="upload-instructions">
+          <h2 id="upload-title" style="font-size:0.95rem; text-transform:uppercase; letter-spacing:0.12em; margin:0 0 0.75rem;">
+            1. Add your Spotify data folder
+          </h2>
+          <p>
+            To start, you need to download your full Spotify streaming history. You can do this by going to:
+            <span class="accent">Spotify &gt; Privacy Settings &gt; Download your data</span>, 
+            where you specifically chose <strong>Extended streaming history</strong>.
+          </p>
+          <p style="margin-top:0.75rem;">Steps to follow:</p>
+          <ol>
+            <li>Request and download your <strong>Extended streaming history</strong> (<code>my_spotify_data.zip</code>) from Spotify.</li>
+            <li>Extract / unzip <code>my_spotify_data.zip</code> on your computer or phone.</li>
+            <li>Open the extracted <code>my_spotify_data</code> folder and select the <code>Spotify Extended Streaming History</code> folder when uploading to Wrapify.</li>
+          </ol>
+          <p style="margin-top:0.5rem;" class="muted">
+            Your files are <strong>never sent to a server</strong>. All parsing and analysis
+            happens locally in your browser using JavaScript.
+          </p>
+        </div>
+
+        <div>
+          <label class="upload-target" id="upload-target">
+            <span class="upload-target-title">Click to choose folder</span>
+            <span class="upload-target-subtitle">or drag &amp; drop your Spotify data folder here</span>
+            <small>Supported: JSON streaming history from your export</small>
+            <input
+              id="folder-input"
+              type="file"
+              webkitdirectory
+              multiple
+              accept=".json"
+            />
+          </label>
+          <div style="margin-top:0.8rem; display:flex; flex-direction:column; gap:0.35rem;">
+            <div class="status-text" id="file-status">
+              No data loaded yet.
+            </div>
+            <div class="muted" style="font-size:0.78rem;" id="file-hint">
+              Tip: inside <code>my_spotify_data</code>, look for a folder named <code>Spotify Extended Streaming History</code>.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="results-shell" aria-live="polite">
+      <div class="results-row">
+        <article class="results-card">
+          <h2>All-time overview</h2>
+          <div class="results-meta" id="overview-meta">
+            <span class="muted">Waiting for data…</span>
+          </div>
+          <p id="overview-summary" class="muted">
+            Once your data is loaded, you will see a quick summary of total plays, listening span, and unique songs and artists.
+          </p>
+        </article>
+
+        <article class="results-card">
+          <h2>Listening years detected</h2>
+          <p id="years-summary" class="muted">
+            No years detected yet.
+          </p>
+        </article>
+      </div>
+
+      <div class="results-row">
+        <article class="results-card" style="grid-column: 1 / -1;">
+          <h2>Minutes & plays by year</h2>
+          <div id="minutes-year-chart" class="hbar-chart muted" aria-label="Minutes listened per year chart"></div>
+        </article>
+      </div>
+
+      <div class="results-row">
+        <article class="results-card">
+          <h2>Top songs (all time)</h2>
+          <div id="overall-songs-chart" class="hbar-chart muted" aria-label="Top songs all-time chart">
+            Load data to see your top songs.
+          </div>
+        </article>
+
+        <article class="results-card" style="display:flex; flex-direction:column; gap:1.25rem;">
+          <div>
+            <h2>Top artists (all time)</h2>
+            <div id="overall-artists-chart" class="hbar-chart muted" aria-label="Top artists all-time chart">
+              Load data to see your top artists.
+            </div>
+          </div>
+
+          <div>
+            <h2>Top albums (all time)</h2>
+            <div id="overall-albums-chart" class="hbar-chart muted" aria-label="Top albums all-time chart">
+              Load data to see your top albums.
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="results-row">
+        <article class="results-card">
+          <div class="table-wrapper">
+            <header>
+              <h3>Top songs by year</h3>
+              <select class="year-select" id="songs-year-select" disabled aria-label="Select listening year for top songs">
+                <option value="">No data</option>
+              </select>
+            </header>
+            <div id="songs-year-chart" class="chart-block hbar-chart muted" aria-label="Top songs bar chart for selected year">
+              Load data to see the top songs bar chart.
+            </div>
+          </div>
+        </article>
+
+        <article class="results-card">
+          <div class="table-wrapper">
+            <header>
+              <h3>Top artists by year</h3>
+              <select class="year-select" id="artists-year-select" disabled aria-label="Select listening year for top artists">
+                <option value="">No data</option>
+              </select>
+            </header>
+            <div id="artists-year-chart" class="chart-block hbar-chart muted" aria-label="Top artists bar chart for selected year">
+              Load data to see the top artists bar chart.
+            </div>
+
+          <div>
+            <header>
+            <h3>Top albums by year</h3>
+            <select class="year-select" id="albums-year-select" disabled aria-label="Select listening year for top albums">
+              <option value="">No data</option>
+            </select>
+          </header>
+          <div id="albums-year-chart" class="chart-block hbar-chart muted" aria-label="Top albums bar chart for selected year">
+            Load data to see your top albums bar chart.
+          </div>
+          </div>
+          </div>
+        </article>
+      </div>
+
+  <script>
+    // Small helper to safely extract track/artist names across Spotify export variants
+    const WRAPIFY_SEP = "||WRAPIFY_SEP||";
+
+    function getTrackName(entry) {
+      // Match Wrapify.py: cleaned_data.dropna(subset=['master_metadata_track_name'])
+      return entry.master_metadata_track_name ?? null;
+    }
+
+    function getArtistName(entry) {
+      // Match Wrapify.py rename: master_metadata_album_artist_name -> artist_name
+      return entry.master_metadata_album_artist_name ?? null;
+    }
+
+    function getAlbumName(entry) {
+      // Match Wrapify.py rename: master_metadata_album_album_name -> album_name
+      return entry.master_metadata_album_album_name ?? null;
+    }
+
+    function getTimestamp(entry) {
+      return entry.ts || entry.endTime || null;
+    }
+
+    function getYearFromEntry(entry) {
+      const ts = getTimestamp(entry);
+      if (!ts) return null;
+      // Handles formats like "2019-04-15T10:20:30Z" or "2019-04-15 10:20"
+      const yearStr = String(ts).slice(0, 4);
+      const yearNum = parseInt(yearStr, 10);
+      if (!Number.isFinite(yearNum)) return null;
+      return yearNum;
+    }
+
+    function normalizeEntries(rawEntries) {
+      const result = [];
+      for (const e of rawEntries) {
+        const year = getYearFromEntry(e);
+        if (!year) continue;
+
+        const trackRaw = getTrackName(e);
+        if (!trackRaw) continue;
+
+        const artistRaw = getArtistName(e);
+        const albumRaw = getAlbumName(e);
+
+        // Match Wrapify.py string cleanup:
+        // cleaned_data['song_title'] = ...astype(str).str.replace('$','S')
+        // same for album_name and artist_name.
+        const track = String(trackRaw).replaceAll("$", "S");
+        const artist = (artistRaw == null ? "nan" : String(artistRaw)).replaceAll("$", "S");
+        const album = (albumRaw == null ? "nan" : String(albumRaw)).replaceAll("$", "S");
+
+        const msPlayed = Number(
+          e.ms_played != null
+            ? e.ms_played
+            : e.msPlayed != null
+            ? e.msPlayed
+            : 0
+        );
+        // Mirror your Python cleaning rule: between(20000, 900000) is inclusive.
+        if (msPlayed < 20000 || msPlayed > 900000) continue;
+
+        result.push({
+          year,
+          track,
+          artist,
+          album,
+          msPlayed: msPlayed || 0,
+        });
+      }
+      return result;
+    }
+
+    function computeStats(entries) {
+      const byYear = new Map();
+      const allSongs = new Map();
+      const allArtists = new Map();
+      const allAlbums = new Map();
+
+      for (const e of entries) {
+        if (!byYear.has(e.year)) {
+          byYear.set(e.year, {
+            songs: new Map(),
+            artists: new Map(),
+            albums: new Map(),
+            plays: 0,
+            msPlayedTotal: 0,
+          });
+        }
+        const bucket = byYear.get(e.year);
+
+        bucket.plays += 1;
+        bucket.msPlayedTotal += e.msPlayed || 0;
+
+        // Wrapify groupbys (after astype(str) cleanup in Wrapify.py):
+        // - Songs: group by (song_title, artist_name, album_name)
+        // - Artists: group by (artist_name)
+        // - Albums: group by (album_name, artist_name)
+        const songKey = e.track + WRAPIFY_SEP + e.artist + WRAPIFY_SEP + e.album;
+        bucket.songs.set(songKey, (bucket.songs.get(songKey) || 0) + 1);
+        allSongs.set(songKey, (allSongs.get(songKey) || 0) + 1);
+
+        bucket.artists.set(e.artist, (bucket.artists.get(e.artist) || 0) + 1);
+        allArtists.set(e.artist, (allArtists.get(e.artist) || 0) + 1);
+
+        const albumKey = e.album + WRAPIFY_SEP + e.artist;
+        bucket.albums.set(albumKey, (bucket.albums.get(albumKey) || 0) + 1);
+        allAlbums.set(albumKey, (allAlbums.get(albumKey) || 0) + 1);
+      }
+
+      return {
+        byYear,
+        allSongs,
+        allArtists,
+        allAlbums,
+      };
+    }
+
+    function sortCounts(map) {
+      return Array.from(map.entries()).sort((a, b) => b[1] - a[1]);
+    }
+
+    function updateOverview(entries, stats) {
+      const overviewMeta = document.getElementById("overview-meta");
+      const overviewSummary = document.getElementById("overview-summary");
+
+      if (!entries.length) {
+        overviewMeta.innerHTML = '<span class="muted">Waiting for data…</span>';
+        overviewSummary.textContent =
+          "Once your data is loaded, you will see a quick summary of total plays, listening span, and unique songs and artists.";
+        return;
+      }
+
+      const years = Array.from(new Set(entries.map((e) => e.year))).sort();
+      const totalPlays = entries.length;
+      const uniqueSongs = stats.allSongs.size;
+      const uniqueArtists = stats.allArtists.size;
+
+      overviewMeta.innerHTML = [
+        `<span><strong>${totalPlays.toLocaleString()}</strong> total plays</span>`,
+        `<span><strong>${uniqueSongs.toLocaleString()}</strong> unique songs</span>`,
+        `<span><strong>${uniqueArtists.toLocaleString()}</strong> unique artists</span>`,
+      ].join(" · ");
+
+      if (years.length === 1) {
+        overviewSummary.textContent = `Your streaming history here covers ${years[0]} with ${totalPlays.toLocaleString()} plays.`;
+      } else {
+        overviewSummary.textContent = `Your streaming history here spans ${years[0]}–${years[years.length - 1]} with ${totalPlays.toLocaleString()} plays.`;
+      }
+    }
+
+    function updateYearsSummary(entries, stats) {
+      const el = document.getElementById("years-summary");
+      if (!entries.length) {
+        el.textContent = "No years detected yet.";
+        el.classList.add("muted");
+        return;
+      }
+
+      const years = Array.from(stats.byYear.keys()).sort();
+      el.classList.remove("muted");
+      el.innerHTML = `
+        <strong>${years.length}</strong> listening years detected:
+        <span class="accent">${years.join(", ")}</span>
+      `;
+    }
+
+    function populateYearSelect(selectEl, stats) {
+      const years = Array.from(stats.byYear.keys()).sort();
+      selectEl.innerHTML = "";
+      for (const year of years) {
+        const opt = document.createElement("option");
+        opt.value = String(year);
+        opt.textContent = year;
+        selectEl.appendChild(opt);
+      }
+      if (years.length) {
+        selectEl.disabled = false;
+        selectEl.value = String(years[years.length - 1]); // default to most recent
+      } else {
+        selectEl.disabled = true;
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "No data";
+        selectEl.appendChild(opt);
+      }
+    }
+
+    function renderSongsTable(bodyEl, stats, year) {
+      bodyEl.innerHTML = "";
+      const bucket = stats.byYear.get(Number(year));
+      if (!bucket || !bucket.songs.size) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        cell.colSpan = 4;
+        cell.className = "muted";
+        cell.textContent = "No song data for this year.";
+        row.appendChild(cell);
+        bodyEl.appendChild(row);
+        return;
+      }
+
+      const topSongs = sortCounts(bucket.songs).slice(0, 10);
+      topSongs.forEach(([key, count], index) => {
+        const [track, artist] = key.split(" — ");
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${index + 1}</td>
+          <td title="${track}">${track}</td>
+          <td title="${artist}">${artist}</td>
+          <td>${count.toLocaleString()}</td>
+        `;
+        bodyEl.appendChild(tr);
+      });
+    }
+
+    function renderArtistsTable(bodyEl, stats, year) {
+      bodyEl.innerHTML = "";
+      const bucket = stats.byYear.get(Number(year));
+      if (!bucket || !bucket.artists.size) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        cell.colSpan = 3;
+        cell.className = "muted";
+        cell.textContent = "No artist data for this year.";
+        row.appendChild(cell);
+        bodyEl.appendChild(row);
+        return;
+      }
+
+      const topArtists = sortCounts(bucket.artists).slice(0, 10);
+      topArtists.forEach(([artist, count], index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${index + 1}</td>
+          <td title="${artist}">${artist}</td>
+          <td>${count.toLocaleString()}</td>
+        `;
+        bodyEl.appendChild(tr);
+      });
+    }
+
+    function renderHorizontalBarChart(containerEl, items, maxValue, valueToText) {
+      containerEl.innerHTML = "";
+      containerEl.classList.remove("muted");
+
+      if (!items.length) {
+        containerEl.classList.add("muted");
+        containerEl.textContent = "No data available.";
+        return;
+      }
+
+      const safeMax = maxValue > 0 ? maxValue : 1;
+      for (const item of items) {
+        const row = document.createElement("div");
+        row.className = "hbar-row";
+        if (item.title) row.title = item.title;
+
+        const label = document.createElement("div");
+        label.className = "hbar-label";
+
+        const main = document.createElement("div");
+        main.className = "main";
+        main.textContent = item.main;
+
+        label.appendChild(main);
+
+        if (item.sub) {
+          const sub = document.createElement("div");
+          sub.className = "sub";
+          sub.textContent = item.sub;
+          label.appendChild(sub);
+        }
+
+        const track = document.createElement("div");
+        track.className = "hbar-track";
+
+        const bar = document.createElement("div");
+        bar.className = "hbar-bar";
+        bar.style.width = `${(item.value / safeMax) * 100}%`;
+
+        track.appendChild(bar);
+
+        const valueEl = document.createElement("div");
+        valueEl.className = "hbar-value";
+        valueEl.textContent = valueToText ? valueToText(item.value) : item.value.toLocaleString();
+
+        row.appendChild(label);
+        row.appendChild(track);
+        row.appendChild(valueEl);
+
+        containerEl.appendChild(row);
+      }
+    }
+
+    function msToMinutesInt(ms) {
+      return Math.round((ms || 0) / 60000);
+    }
+
+    async function readFilesAsJson(fileList) {
+      const all = [];
+      for (const file of fileList) {
+        if (!file.name.toLowerCase().endsWith(".json")) continue;
+        const text = await file.text();
+        try {
+          const parsed = JSON.parse(text);
+          if (Array.isArray(parsed)) {
+            all.push(...parsed);
+          } else {
+            // Some exports use an object wrapper
+            if (Array.isArray(parsed.items)) {
+              all.push(...parsed.items);
+            }
+          }
+        } catch (err) {
+          console.warn("Skipping invalid JSON file:", file.name, err);
+        }
+      }
+      return all;
+    }
+
+    (function initWrapifyApp() {
+      const folderInput = document.getElementById("folder-input");
+      const uploadTarget = document.getElementById("upload-target");
+      const fileStatus = document.getElementById("file-status");
+      const fileHint = document.getElementById("file-hint");
+
+      const songsYearSelect = document.getElementById("songs-year-select");
+      const artistsYearSelect = document.getElementById("artists-year-select");
+      const minutesYearChart = document.getElementById("minutes-year-chart");
+      const overallSongsChart = document.getElementById("overall-songs-chart");
+      const overallArtistsChart = document.getElementById("overall-artists-chart");
+      const overallAlbumsChart = document.getElementById("overall-albums-chart");
+      const songsYearChart = document.getElementById("songs-year-chart");
+      const artistsYearChart = document.getElementById("artists-year-chart");
+      const albumsYearChart = document.getElementById("albums-year-chart");
+      const albumsYearSelect = document.getElementById("albums-year-select");
+
+      let normalizedEntries = [];
+      let stats = null;
+      let isSyncingYearSelects = false;
+
+      function setChartsForYear(year) {
+        if (!stats || !year) return;
+        renderSongsChart(year);
+        renderArtistsChart(year);
+        renderAlbumsChart(year);
+      }
+
+      function renderYearMetrics(yearMetrics) {
+        // Chart: minutes per year
+        const maxMinutes = Math.max(...yearMetrics.map((x) => x.minutes), 0);
+        const chartItems = yearMetrics
+          .slice()
+          .sort((a, b) => a.year - b.year)
+          .map((x) => ({
+            main: String(x.year),
+            sub: `${x.minutes.toLocaleString()} min • ${x.plays.toLocaleString()} plays`,
+            value: x.minutes,
+            title: `${x.year}: ${x.minutes.toLocaleString()} minutes, ${x.plays.toLocaleString()} plays`,
+          }));
+
+        renderHorizontalBarChart(minutesYearChart, chartItems, maxMinutes, (v) => `${v.toLocaleString()} min`);
+      }
+
+      function renderSongsChart(year) {
+        const bucket = stats.byYear.get(Number(year));
+        const topSongs = bucket ? sortCounts(bucket.songs).slice(0, 10) : [];
+        const maxPlays = topSongs.reduce((m, [, c]) => Math.max(m, c), 0);
+
+        const items = topSongs.map(([key, count]) => {
+          const parts = String(key).split(WRAPIFY_SEP);
+          const track = parts[0] || "Unknown track";
+          const artist = parts[1] || "Unknown artist";
+          const album = parts[2] || null;
+          return {
+            main: track,
+            sub: artist,
+            value: count,
+            title: album
+              ? `${track} — ${artist} (${album}): ${count.toLocaleString()} plays`
+              : `${track} — ${artist}: ${count.toLocaleString()} plays`,
+          };
+        });
+
+        renderHorizontalBarChart(songsYearChart, items, maxPlays, (v) => v.toLocaleString());
+      }
+
+      function renderArtistsChart(year) {
+        const bucket = stats.byYear.get(Number(year));
+        const topArtists = bucket ? sortCounts(bucket.artists).slice(0, 10) : [];
+        const maxPlays = topArtists.reduce((m, [, c]) => Math.max(m, c), 0);
+
+        const items = topArtists.map(([artist, count]) => ({
+          main: artist,
+          value: count,
+          title: `${artist}: ${count.toLocaleString()} plays`,
+        }));
+
+        renderHorizontalBarChart(artistsYearChart, items, maxPlays, (v) => v.toLocaleString());
+      }
+
+      function renderAlbumsChart(year) {
+        const bucket = stats.byYear.get(Number(year));
+        const topAlbums = bucket ? sortCounts(bucket.albums).slice(0, 5) : [];
+        const maxPlays = topAlbums.reduce((m, [, c]) => Math.max(m, c), 0);
+
+        const items = topAlbums.map(([key, count]) => {
+          const parts = String(key).split(WRAPIFY_SEP);
+          const album = parts[0] || "Unknown album";
+          const artist = parts[1] || "Unknown artist";
+          return {
+            main: album,
+            sub: artist,
+            value: count,
+            title: `${album} — ${artist}: ${count.toLocaleString()} plays`,
+          };
+        });
+
+        renderHorizontalBarChart(albumsYearChart, items, maxPlays, (v) => v.toLocaleString());
+      }
+
+      function renderOverallCharts() {
+        // Top songs (all time) - top 20 by play count
+        const topSongs = stats ? sortCounts(stats.allSongs).slice(0, 20) : [];
+        const maxSongPlays = topSongs.reduce((m, [, c]) => Math.max(m, c), 0);
+        const songItems = topSongs.map(([key, count]) => {
+          const parts = String(key).split(WRAPIFY_SEP);
+          const track = parts[0] || "Unknown track";
+          const artist = parts[1] || "Unknown artist";
+          const album = parts[2] || null;
+          return {
+            main: track,
+            sub: artist,
+            value: count,
+            title: album
+              ? `${track} — ${artist} (${album}): ${count.toLocaleString()} plays`
+              : `${track} — ${artist}: ${count.toLocaleString()} plays`,
+          };
+        });
+        renderHorizontalBarChart(overallSongsChart, songItems, maxSongPlays, (v) => v.toLocaleString());
+
+        // Top artists (all time) - top 10 by play count
+        const topArtists = stats ? sortCounts(stats.allArtists).slice(0, 10) : [];
+        const maxArtistPlays = topArtists.reduce((m, [, c]) => Math.max(m, c), 0);
+        const artistItems = topArtists.map(([artist, count]) => ({
+          main: artist,
+          value: count,
+          title: `${artist}: ${count.toLocaleString()} plays`,
+        }));
+        renderHorizontalBarChart(overallArtistsChart, artistItems, maxArtistPlays, (v) => v.toLocaleString());
+
+        // Top albums (all time) - top 10 by play count
+        const topAlbums = stats ? sortCounts(stats.allAlbums).slice(0, 10) : [];
+        const maxAlbumPlays = topAlbums.reduce((m, [, c]) => Math.max(m, c), 0);
+        const albumItems = topAlbums.map(([key, count]) => {
+          const parts = String(key).split(WRAPIFY_SEP);
+          const album = parts[0] || "Unknown album";
+          const artist = parts[1] || "Unknown artist";
+          return {
+            main: album,
+            sub: artist,
+            value: count,
+            title: `${album} — ${artist}: ${count.toLocaleString()} plays`,
+          };
+        });
+        renderHorizontalBarChart(overallAlbumsChart, albumItems, maxAlbumPlays, (v) => v.toLocaleString());
+      }
+
+      function handleFiles(files) {
+        if (!files || !files.length) return;
+
+        fileStatus.textContent = "Reading and parsing files…";
+        fileHint.textContent = `${files.length} files selected. This happens locally in your browser.`;
+
+        readFilesAsJson(files).then((rawEntries) => {
+          normalizedEntries = normalizeEntries(rawEntries);
+          stats = computeStats(normalizedEntries);
+
+          const yearMetrics = Array.from(stats.byYear.entries())
+            .map(([year, bucket]) => ({
+              year: Number(year),
+              plays: bucket.plays,
+              minutes: msToMinutesInt(bucket.msPlayedTotal),
+            }))
+            .sort((a, b) => a.year - b.year);
+
+          renderYearMetrics(yearMetrics);
+
+          fileStatus.innerHTML = `
+            <strong>${normalizedEntries.length.toLocaleString()}</strong> valid plays loaded
+            from <strong>${files.length}</strong> JSON file${files.length !== 1 ? "s" : ""}.
+          `;
+
+          updateOverview(normalizedEntries, stats);
+          updateYearsSummary(normalizedEntries, stats);
+          populateYearSelect(songsYearSelect, stats);
+          populateYearSelect(artistsYearSelect, stats);
+          populateYearSelect(albumsYearSelect, stats);
+
+          renderOverallCharts();
+
+          const initialYear = songsYearSelect.value;
+          if (initialYear) {
+            isSyncingYearSelects = true;
+            artistsYearSelect.value = initialYear;
+            albumsYearSelect.value = initialYear;
+            isSyncingYearSelects = false;
+            setChartsForYear(initialYear);
+          }
+        });
+      }
+
+      folderInput.addEventListener("change", (e) => {
+        const files = e.target.files;
+        handleFiles(files);
+      });
+
+      uploadTarget.addEventListener("click", () => {
+        folderInput.click();
+      });
+
+      uploadTarget.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        uploadTarget.classList.add("drag-over");
+      });
+
+      uploadTarget.addEventListener("dragleave", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        uploadTarget.classList.remove("drag-over");
+      });
+
+      uploadTarget.addEventListener("drop", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        uploadTarget.classList.remove("drag-over");
+        const files = e.dataTransfer.files;
+        handleFiles(files);
+      });
+
+      songsYearSelect.addEventListener("change", () => {
+        if (!stats) return;
+        if (isSyncingYearSelects) return;
+        const year = songsYearSelect.value;
+        if (!year) return;
+        isSyncingYearSelects = true;
+        artistsYearSelect.value = year;
+        albumsYearSelect.value = year;
+        isSyncingYearSelects = false;
+        setChartsForYear(year);
+      });
+
+      artistsYearSelect.addEventListener("change", () => {
+        if (!stats) return;
+        if (isSyncingYearSelects) return;
+        const year = artistsYearSelect.value;
+        if (!year) return;
+        isSyncingYearSelects = true;
+        songsYearSelect.value = year;
+        albumsYearSelect.value = year;
+        isSyncingYearSelects = false;
+        setChartsForYear(year);
+      });
+
+      albumsYearSelect.addEventListener("change", () => {
+        if (!stats) return;
+        if (isSyncingYearSelects) return;
+        const year = albumsYearSelect.value;
+        if (!year) return;
+        isSyncingYearSelects = true;
+        songsYearSelect.value = year;
+        artistsYearSelect.value = year;
+        isSyncingYearSelects = false;
+        setChartsForYear(year);
+      });
+    })();
+  </script>
+</body>
+</html>
+
